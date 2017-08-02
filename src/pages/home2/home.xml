@@ -1,0 +1,14 @@
+<import src='../../components/header/index.wxml'/>
+<import src='../../components/buttongroup/index.wxml'/>
+
+<view class="page">
+  <template is="header" data="{{...header}}"></template>
+  <view class="index-main">
+    <view class="top-main">
+      <view class="circle-pie"></view>
+      <view class="filter-buttons">
+        <template is="buttongroup" data="{{...buttongroup}}"></template>
+      </view>
+    </view>
+  </view>
+</view>

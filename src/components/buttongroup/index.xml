@@ -1,0 +1,12 @@
+<template name="buttongroup">
+  <view class="button-group">
+    <view class="button-item {{activeIndex == index ? 'selected' : ''}}"
+          wx:for="{{items}}"
+          wx:key="item.text"
+          id="{{index}}"
+          bindtap="onButtonItemClick"
+    >
+      <text>{{item.text}}</text>
+    </view>
+  </view>
+</template>

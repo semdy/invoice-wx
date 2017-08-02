@@ -1,0 +1,15 @@
+<import src='../icon/index.wxml'/>
+
+<template name="header">
+  <view class="header">
+    <view class="left">
+      <template wx:if="{{left.name}}" is="icon" data="{{ ...left}}"></template>
+      <text wx:if="{{left.text}}" class="text" data-side="{{left.side}}" bindtap="onClick">{{left.text}}</text>
+    </view>
+    <text class="title">{{ title }}</text>
+    <view class="right">
+      <template wx:if="{{right.name}}" is="icon" data="{{ ...right}}"></template>
+      <text wx:if="{{right.text}}" class="text" data-side="{{right.side}}" bindtap="onClick">{{right.text}}</text>
+    </view>
+  </view>
+</template>

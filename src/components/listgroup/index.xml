@@ -1,0 +1,10 @@
+<import src='../icon/index.wxml'/>
+
+<template name="listgroup">
+  <view class="list-group">
+    <template is="icon" data="{{ ...icon}}"></template>
+    <text class="list-group-name">{{text}}</text>
+    <text class="list-group-value">{{value}}</text>
+    <template is="icon" data="{{name: 'angle-right', size: 'small', mode: 'aspectFit', style: 'padding-right: 0'}}"></template>
+  </view>
+</template>

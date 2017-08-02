@@ -1,0 +1,5 @@
+<template name="icon">
+  <view style="{{style||''}}" class="icon" data-side="{{side}}" bindtap="onClick">
+    <image class="icon-img {{size}}" src="../../images/{{name}}.png" mode="{{mode}}"></image>
+  </view>
+</template>

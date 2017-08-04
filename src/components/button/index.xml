@@ -1,0 +1,5 @@
+<template name="button">
+  <view class="button {{size||'normal'}} {{type||'primary'}} {{className||''}}" style="{{style||''}}" bindtap="onButtonTap">
+   <text>{{text}}</text>
+  </view>
+</template>

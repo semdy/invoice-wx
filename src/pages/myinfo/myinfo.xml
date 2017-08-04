@@ -1,0 +1,37 @@
+<import src='../../components/button/index.wxml'/>
+
+<view class="myinfo-container">
+  <view class="myinfo-form-wrapper">
+    <view class="myinfo-item">
+      <view class="myinfo-lebel">公司名称</view>
+      <input class="input normal plain" data-name="name" value="{{data.name}}" placeholder="请输入公司名称" bindinput="onInputChange"></input>
+    </view>
+    <view class="myinfo-item">
+      <view class="myinfo-lebel">用户名</view>
+      <input class="input normal plain" data-name="username" value="{{data.username}}" placeholder="请输入用户名" bindinput="onInputChange"></input>
+    </view>
+    <view class="myinfo-item">
+      <view class="myinfo-lebel">邮箱</view>
+      <input class="input normal plain" data-name="email" value="{{data.email}}" placeholder="请输入邮箱" bindinput="onInputChange"></input>
+    </view>
+    <view class="myinfo-item">
+      <view class="myinfo-lebel">联系电话</view>
+      <input class="input normal plain" data-name="phone" value="{{data.phone}}" placeholder="请输入联系电话" bindinput="onInputChange"></input>
+    </view>
+    <view class="myinfo-item">
+      <view class="myinfo-lebel">新密码</view>
+      <input class="input normal plain" data-name="password" password="{{true}}" placeholder="请输入新密码" bindinput="onInputChange"></input>
+    </view>
+    <view class="myinfo-item">
+      <view class="myinfo-lebel">确认密码</view>
+      <input class="input normal plain" data-name="passwordrm" password="{{true}}" placeholder="请输入确认密码" bindinput="onInputChange"></input>
+    </view>
+  </view>
+
+  <view class="myinfo-actions">
+    <view bindtap="handleSubmit">
+      <template is="button" data="{{text: '修改信息'}}"></template>
+    </view>
+  </view>
+
+</view>

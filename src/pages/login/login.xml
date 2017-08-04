@@ -1,0 +1,23 @@
+<import src='../../components/button/index.wxml'/>
+
+<view class="login-container">
+  <view class="logo">
+    <text>FACTURA</text>
+  </view>
+  <view class="login-form-wrapper">
+    <view class="login-item">
+      <view class="login-lebel">用户名</view>
+      <input class="input large plain" placeholder="请输入用户名" bindfocus="onFocus" bindinput="onUsernameInput"></input>
+    </view>
+    <view class="login-item">
+      <view class="login-lebel">密码</view>
+      <input class="input large plain" password="{{true}}" placeholder="请输入密码" bindfocus="onFocus" bindinput="onPasswordInput"></input>
+    </view>
+  </view>
+  <view class="help-block" wx:if="{{errMsg!==''}}">{{errMsg}}</view>
+
+  <view class="login-actions">
+    <template is="button" data="{{text: isLogining ? '登录中...' : '登录', size: 'large', type: isLogining ? 'disabled' : 'primary'}}"></template>
+  </view>
+
+</view>

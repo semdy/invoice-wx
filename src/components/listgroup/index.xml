@@ -1,7 +1,7 @@
 <import src='../icon/index.wxml'/>
 
 <template name="listgroup">
-  <view class="list-group">
+  <view class="list-group" data-type="{{type}}" bindtap="onListItemClick">
     <template is="icon" data="{{ ...icon}}"></template>
     <text class="list-group-name">{{text}}</text>
     <text class="list-group-value">{{value}}</text>

@@ -1,17 +1,32 @@
+<import src='../../components/icon/index.wxml'/>
 <import src='../../components/buttongroup/index.wxml'/>
 <import src='../../components/listgroup/index.wxml'/>
 
 <view class="page">
   <view class="index-main">
     <view class="top-main">
-      <view class="circle-pie"></view>
+      <view class="circle-pie">
+        <canvas class="circle-canvas" canvas-id="percentage-pie"></canvas>
+      </view>
       <view class="filter-buttons">
         <template is="buttongroup" data="{{...buttongroup}}"></template>
       </view>
     </view>
 
     <view class="index-entrace">
-      <template is="listgroup" data="{{...item}}" wx:for="{{listgroup}}"></template>
+      <template is="listgroup" data="{{...item}}" wx:for="{{listgroup.items}}" wx:key="type"></template>
+    </view>
+
+    <view class="index-footer">
+      <view bindtap="handleRefresh">
+        <template is="icon" data="{{name: 'refresh', size: 'large', mode: 'aspectFit'}}"></template>
+      </view>
+      <view class="index-camera-wrap" bindtap="launchScaner">
+        <template is="icon" data="{{name: 'camera-blue', size: 'large', mode: 'aspectFit'}}"></template>
+      </view>
+      <view bindtap="gotoInvoiceList">
+        <template is="icon" data="{{name: 'detail', size: 'large', mode: 'aspectFit'}}"></template>
+      </view>
     </view>
 
   </view>

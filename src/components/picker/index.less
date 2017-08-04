@@ -1,0 +1,29 @@
+.picker{
+  display: flex;
+  flex: 1;
+  position: relative;
+  box-sizing: border-box;
+  border: 1px solid #008cee;
+  padding-left: 24rpx;
+  padding-right: 24rpx;
+  background-color: #fff;
+  border-radius: 8rpx;
+  align-items: center;
+
+  &.normal{
+    height: 76rpx;
+  }
+  &.small{
+    height: 60rpx;
+  }
+  &.large{
+    height: 84rpx;
+  }
+
+  > .icon{
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+}

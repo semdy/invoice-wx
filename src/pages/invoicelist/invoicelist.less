@@ -1,0 +1,88 @@
+/*@import "../../components/button/index.wxss";*/
+/*@import "../../components/icon/index.wxss";*/
+/*@import "../../components/input/index.wxss";*/
+/*@import "../../components/picker/index.wxss";*/
+
+.query-container {
+  margin: 20rpx 10rpx 10rpx;
+  padding: 16rpx;
+  background-color: #fff;
+  border-radius: 8rpx;
+
+  .query-item{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10rpx;
+  }
+
+  .query-item-label{
+    margin-right: 10rpx;
+  }
+}
+
+.listView-container {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 8rpx;
+  margin-left: 10rpx;
+  margin-right: 10rpx;
+  margin-bottom: 10rpx;
+
+  .table-row{
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #eee;
+    margin-top: 10rpx;
+    margin-bottom: 10rpx;
+
+    &:last-child{
+      border-bottom-color: transparent;
+    }
+  }
+  .table-cell{
+    display: flex;
+    flex: 1;
+    align-items: center;
+    text-align: center;
+    padding: 16rpx 10rpx;
+  }
+  .line-number{
+    display: flex;
+    align-items: center;
+    width: 245rpx;
+    padding: 16rpx 16rpx;
+  }
+
+  .date-style{
+    margin-left: 10rpx;
+    margin-right: 10rpx;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .date-line{
+    position: absolute;
+    left: 2%;
+    top: 20rpx;
+    width: 96%;
+    height: 8rpx;
+    opacity: .8;
+  }
+
+  .date-text-style{
+    position: relative;
+    color: #999;
+    font-size: 24rpx;
+    text-align: center;
+    padding: 4rpx 16rpx;
+    margin-left: -60rpx;
+    background-color: #fff;
+  }
+
+  checkbox{
+    transform: scale(0.65);
+    margin-right: -4rpx;
+    vertical-align: 3rpx;
+  }
+}

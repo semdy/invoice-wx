@@ -2,7 +2,7 @@ module.exports = {
 
   // 组件私有数据
   data: {
-
+    items: []
   },
 
   // 组件属性
@@ -22,9 +22,12 @@ module.exports = {
   },
 
   onListItemClick(e){
-    this.childrens.listitem.setData({
-      activeIndex: e.currentTarget.id
-    });
+    let filterType = e.currentTarget.dataset.type;
+    if( filterType ){
+      wx.navigateTo({
+        url: '/pages/invoicelist/invoicelist?status=' + filterType + "&day=" + this.day
+      })
+    }
   },
 
   // 组件私有方法

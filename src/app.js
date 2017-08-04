@@ -5,9 +5,9 @@
  * > 小程序支持以`CommonJS`规范组织代码结构
  */
 const wechat = require('./utils/wechat')
-const Promise = require('./utils/bluebird')
 
-require('./libs/wx-component/index')
+require('pollyfill/index');
+require('./libs/wx-component/index');
 
 App({
   /**

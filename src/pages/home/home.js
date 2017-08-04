@@ -1,14 +1,24 @@
 // 获取全局应用程序实例对象
 const app = getApp()
 
-// 创建页面实例对象
+import PercentageCircle from "../../components/percentagecircle/index";
+import fetch from '../../service/fetch';
+import {session} from '../../service/auth';
+import {showError} from '../../utils/util';
+
+function parseDate(dateStr){
+  dateStr = String(dateStr);
+  return dateStr.substring(0, 4) + "-" + dateStr.substring(4, 6) + "-" + dateStr.substring(6, dateStr.length);
+}
+
 Page({
-  /**
-   * 页面的初始数据
-   */
   data: {
-    title: 'Index page',
-    userInfo: {}
+    percent: 0,
+    formula: "0/0",
+    data: {
+      sum: 0,
+      statusTotal: []
+    }
   },
 
   components: {
@@ -16,104 +26,242 @@ Page({
       activeIndex: 0,
       items: [
         {
-          text: '当天上传'
+          text: '当天上传',
+          value: '1'
         },
         {
-          text: '7天上传'
+          text: '7天上传',
+          value: '7'
         },
         {
-          text: '30天上传'
+          text: '30天上传',
+          value: '30'
         },
         {
-          text: '全部'
+          text: '全部',
+          value: ''
         }]
     },
-    listgroup: [
-      {
-        icon: {
-          name: 'find',
-          mode: 'aspectFit',
-          size: 'normal'
+    listgroup: {
+      items: [
+        {
+          icon: {
+            name: 'find',
+            mode: 'aspectFit',
+            size: 'normal'
+          },
+          text: '查询中',
+          value: 0,
+          type: 'waiting'
         },
-        text: '查询中',
-        value: 0
-      },
-      {
-        icon: {
-          name: 'need-update',
-          mode: 'aspectFit',
-          size: 'normal'
+        {
+          icon: {
+            name: 'need-update',
+            mode: 'aspectFit',
+            size: 'normal'
+          },
+          text: '信息需更新',
+          value: 0,
+          type: 'needChange'
         },
-        text: '信息需更新',
-        value: 0
-      },
-      {
-        icon: {
-          name: 'list-add',
-          mode: 'aspectFit',
-          size: 'normal'
+        {
+          icon: {
+            name: 'list-add',
+            mode: 'aspectFit',
+            size: 'normal'
+          },
+          text: '销货明细需补充',
+          value: 0,
+          type: 'noSales'
         },
-        text: '销货明细需补充',
-        value: 0
-      },
-      {
-        icon: {
-          name: 'file-error',
-          mode: 'aspectFit',
-          size: 'normal'
+        {
+          icon: {
+            name: 'file-error',
+            mode: 'aspectFit',
+            size: 'normal'
+          },
+          text: '查询无结果',
+          value: 0,
+          type: 'failed'
         },
-        text: '查询无结果',
-        value: 0
-      },
-      {
-        icon: {
-          name: 'search-error',
-          mode: 'aspectFit',
-          size: 'normal'
-        },
-        text: '无法识别',
-        value: 0
-      }]
+        {
+          icon: {
+            name: 'search-error',
+            mode: 'aspectFit',
+            size: 'normal'
+          },
+          text: '无法识别',
+          value: 0,
+          type: 'noInvoice'
+        }]
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
+  day: '1',
+
+  circle: null,
+
+  onButtonItemClick(e){
+    let index = e.currentTarget.id;
+    let buttongroup = this.childrens.buttongroup;
+    this.handleType(buttongroup.data.items[index].value)
+    buttongroup.setData({
+      activeIndex: index
+    });
+  },
+
+  handleType(value){
+    this.day = value;
+    this.fetchData(value);
+  },
+
+  _getValueByStatus(status){
+    let result = this.data.data.statusTotal.find((item) => {
+      return item.status === status;
+    });
+
+    return String(result ? (result.total || 0) : 0);
+  },
+
+  _getSuccessCount(data){
+    let ret = data.find(item => item.status === 'success');
+    if( !ret ) return 0;
+    return ret.total;
+  },
+
+  fetchData(day){
+    let params = {customer: session.get().id};
+    if( day !== undefined ){
+      params.day = day;
+    }
+    fetch.get("invoiceCount", params).then(data => {
+      this._setData(data);
+    }, err => {
+
+    });
+  },
+
+  _setData(data){
+    this.setData({
+      percent: data.sum === 0 ? 0 : this._getSuccessCount(data.statusTotal)/data.sum,
+      formula: this._getSuccessCount(data.statusTotal) + "/" + data.sum,
+      data: data
+    });
+    this.circle.percent = this.data.percent;
+    let listgroup = this.childrens.listgroup;
+    let items = listgroup.data.items;
+    for(let i in items){
+      items[i].value = this._getValueByStatus(items[i].type);
+    }
+    listgroup.setData({
+      items: items
+    });
+  },
+
+  handleRefresh(){
+    this.fetchData(this.day);
+  },
+
+  _parseInvoiceInfo(data){
+    let codes = data.split(",");
+    return {
+      customer: session.get().id,
+      invoiceCode: codes[2],
+      invoiceNumber: codes[3],
+      invoicePrice: codes[4],
+      issueDate: parseDate(codes[5]),
+      correctCode: codes[6]
+    };
+  },
+
+  uploadBarCode(data, goBack) {
+    fetch.post("upload", this._parseInvoiceInfo(data)).then(data => {
+      if (data === true) {
+        wx.showToast("上传成功");
+        if (!goBack) {
+          this.launchScaner();
+        }
+      } else {
+        showError("该发票已存在");
+      }
+    }, errMsg => {
+      showError("上传失败, 请重试!");
+    });
+  },
+
+  launchScaner(){
+    wx.scanCode({
+      success: (res) => {
+        this.onBarcodeRead(res);
+      },
+      fail: () => {
+        //showError("扫码调用失败");
+      }
+    });
+  },
+
+  onBarcodeRead(e){
+    let isExpectQrcode = true;
+    let ret = e.result.split(",");
+    if (ret.length < 3) {
+      isExpectQrcode = false;
+    }
+    else if (ret[2].length < 10) {
+      isExpectQrcode = false;
+    }
+    else if( ret[3].length < 8 ){
+      isExpectQrcode = false;
+    }
+
+    if (isExpectQrcode) {
+      wx.showModal({
+        title: '二维码识别成功',
+        content: e.result,
+        confirmText: "下一张",
+        cancelText: "完成",
+        success: (res) => {
+          if (res.confirm) {
+            this.uploadBarCode(e.data, false)
+          } else if (res.cancel) {
+            this.uploadBarCode(e.data, true)
+          }
+        }
+      });
+    } else {
+      wx.showModal({
+        title: '二维码识别失败',
+        content: "请扫描发票左上角二维码",
+        confirmText: "重新扫描",
+        cancelText: "取消",
+        success: (res) => {
+          if (res.confirm) {
+            this.launchScaner();
+          }
+        }
+      });
+    }
+  },
+
+  gotoInvoiceList(){
+    wx.navigateTo({
+      url: '/pages/invoicelist/invoicelist'
+    })
+  },
+
   onLoad () {
-    console.log(' ---------- onLoad ----------')
-    // console.dir(app.data)
     app.getUserInfo()
       .then(info => this.setData({userInfo: info}))
-      .catch(console.info)
+      .catch(console.info);
+
+    wx.setStorageSync('session',{"name":"阙天咨询","username":"admin","role":2,"email":"steven.sibai@qtdatas.com","phone":"13761450327","id":"59280dd72001a64700fee81d"})
   },
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
+
   onReady () {
-    console.log(' ---------- onReady ----------')
+    this.circle = new PercentageCircle('percentage-pie', {percent: 0, radius: 40, borderWidth: 12});
+    this.handleRefresh();
   },
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow () {
-    console.log(' ---------- onShow ----------')
-  },
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide () {
-    console.log(' ---------- onHide ----------')
-  },
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload () {
-    console.log(' ---------- onUnload ----------')
-  },
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
+
   onPullDownRefresh () {
-    console.log(' ---------- onPullDownRefresh ----------')
+    this.handleRefresh();
   }
 })

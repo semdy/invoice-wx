@@ -1,5 +1,5 @@
 <template name="icon">
-  <view style="{{style||''}}" class="icon" data-side="{{side}}" bindtap="onClick">
-    <image class="icon-img {{size}}" src="../../images/{{name}}.png" mode="{{mode}}"></image>
+  <view style="{{style||''}}" class="icon" data-side="{{side||''}}" data-name="{{name}}" bindtap="onIconClick">
+    <image class="icon-img {{size||'normal'}}" src="../../images/{{name}}.png" mode="{{mode||'aspectFit'}}"></image>
   </view>
 </template>

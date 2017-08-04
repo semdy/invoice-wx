@@ -1,0 +1,172 @@
+<import src='../../components/button/index.wxml'/>
+<import src='../../components/icon/index.wxml'/>
+
+<view class="detail-wrapper">
+  <view class="imgView-container">
+    <image src="../../images/20170803105349.jpg"
+           data-src="../../images/20170803105349.jpg"
+           mode="aspectFit"
+           style="height: {{imgHeight}}px"
+           bindtap="onThumbTap"
+    >
+    </image>
+  </view>
+
+  <view class="swiper-item-thumb">
+    <view class="{{tabIndex == 0 ? 'selected' : ''}}" data-index="0" bindtap="changeTab">发票信息</view>
+    <view class="{{tabIndex == 1 ? 'selected' : ''}}" data-index="1" bindtap="changeTab">销货明细</view>
+  </view>
+
+  <swiper class="detail-swiper" duration="300" current="{{tabIndex}}" bindchange="onSwiperChange">
+    <swiper-item class="detail-swiper-item left">
+      <scroll-view scroll-y="true" class="invoice-scrollview">
+        <view class="detail-list-item">
+          <view class="detail-item-label">发票代码</view>
+          <view class="detail-item-content">2390230</view>
+        </view>
+        <view class="detail-list-item">
+          <view class="detail-item-label">发票号码</view>
+          <view class="detail-item-content">2390230</view>
+        </view>
+        <view class="detail-list-item">
+          <view class="detail-item-label">开票日期</view>
+          <view class="detail-item-content">2390230</view>
+        </view>
+        <view class="detail-list-item">
+          <view class="detail-item-label">税前金额</view>
+          <view class="detail-item-content">2390230</view>
+        </view>
+        <view class="detail-list-item">
+          <view class="detail-item-label">校验码后六位</view>
+          <view class="detail-item-content">2390230</view>
+        </view>
+        <view class="detail-list-item">
+          <view class="detail-item-label">购买方名称</view>
+          <view class="detail-item-content">2390230</view>
+        </view>
+        <view class="detail-list-item">
+          <view class="detail-item-label">销售方名称</view>
+          <view class="detail-item-content">2390230</view>
+        </view>
+      </scroll-view>
+      <view class="detail-list-footer">
+        <view bindtap="handleUpdate">
+          <template is="button" data="{{size: 'small', text: '更新', type: 'disabled', style: 'width: 100rpx; flex: none'}}"></template>
+        </view>
+        <view bindtap="handleDel" style="margin-left:30rpx;">
+          <template is="button" data="{{size: 'small', text: '删除', style: 'width: 100rpx; flex: none'}}"></template>
+        </view>
+      </view>
+    </swiper-item>
+
+    <swiper-item class="detail-swiper-item">
+      <scroll-view scroll-y="true" class="sales-scrollview">
+        <view class="detai-list-wrapper">
+            <view class="detail-upload-button" bindtap="handleUploadSales">
+              <template is="icon" data="{{name: 'plus', size: 'large'}}"></template>
+              <text class="upload-hint-text">请拍摄销货清单</text>
+            </view>
+        </view>
+        <!--<view class="sales-item-panel">
+          <view class="detail-list-item">
+            <view class="detail-item-label">货物名称</view>
+            <view class="detail-item-content">消费</view>
+          </view>
+          <view class="detail-list-item">
+            <view class="detail-item-label">规格型号</view>
+            <view class="detail-item-content">2017-07</view>
+          </view>
+          <view class="detail-item-inline">
+            <view class="detail-list-item">
+              <view class="detail-item-label">单位</view>
+              <view class="detail-item-content"></view>
+            </view>
+            <view class="detail-list-item">
+              <view class="detail-item-label">数量</view>
+              <view class="detail-item-content">1</view>
+            </view>
+          </view>
+          <view class="detail-item-inline">
+            <view class="detail-list-item">
+              <view class="detail-item-label">单价</view>
+              <view class="detail-item-content">23232</view>
+            </view>
+            <view class="detail-list-item">
+              <view class="detail-item-label">税额</view>
+              <view class="detail-item-content">3.21</view>
+            </view>
+          </view>
+        </view>
+
+        <view class="sales-item-panel">
+          <view class="detail-list-item">
+            <view class="detail-item-label">货物名称</view>
+            <view class="detail-item-content">消费</view>
+          </view>
+          <view class="detail-list-item">
+            <view class="detail-item-label">规格型号</view>
+            <view class="detail-item-content">2017-07</view>
+          </view>
+          <view class="detail-item-inline">
+            <view class="detail-list-item">
+              <view class="detail-item-label">单位</view>
+              <view class="detail-item-content"></view>
+            </view>
+            <view class="detail-list-item">
+              <view class="detail-item-label">数量</view>
+              <view class="detail-item-content">1</view>
+            </view>
+          </view>
+          <view class="detail-item-inline">
+            <view class="detail-list-item">
+              <view class="detail-item-label">单价</view>
+              <view class="detail-item-content">23232</view>
+            </view>
+            <view class="detail-list-item">
+              <view class="detail-item-label">税额</view>
+              <view class="detail-item-content">3.21</view>
+            </view>
+          </view>
+        </view>
+
+        <view class="sales-item-panel">
+          <view class="detail-list-item">
+            <view class="detail-item-label">货物名称</view>
+            <view class="detail-item-content">消费</view>
+          </view>
+          <view class="detail-list-item">
+            <view class="detail-item-label">规格型号</view>
+            <view class="detail-item-content">2017-07</view>
+          </view>
+          <view class="detail-item-inline">
+            <view class="detail-list-item">
+              <view class="detail-item-label">单位</view>
+              <view class="detail-item-content"></view>
+            </view>
+            <view class="detail-list-item">
+              <view class="detail-item-label">数量</view>
+              <view class="detail-item-content">1</view>
+            </view>
+          </view>
+          <view class="detail-item-inline">
+            <view class="detail-list-item">
+              <view class="detail-item-label">单价</view>
+              <view class="detail-item-content">23232</view>
+            </view>
+            <view class="detail-list-item">
+              <view class="detail-item-label">税额</view>
+              <view class="detail-item-content">3.21</view>
+            </view>
+          </view>
+        </view>-->
+      </scroll-view>
+
+      <view class="detail-query-footer">
+        <text>查询结果: 0条</text>
+      </view>
+
+    </swiper-item>
+
+  </swiper>
+
+</view>

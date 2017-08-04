@@ -1,6 +1,0 @@
-<import src='../../components/header/index.wxml'/>
-
-<view class="container">
-  <template is="header" data="{{...header}}"></template>
-  <text class="title">{{ title }}</text>
-</view>

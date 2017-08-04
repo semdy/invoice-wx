@@ -4,7 +4,10 @@
   // https://mp.weixin.qq.com/debug/wxadoc/dev/framework/config.html#pages
   "pages": [
     "pages/home/home",
-    "pages/demo/demo"
+    "pages/invoicelist/invoicelist",
+    "pages/detail/detail",
+    "pages/myinfo/myinfo",
+    "pages/login/login"
     // Dont remove this comment
   ],
   // Window configuration
@@ -12,19 +15,19 @@
   "window": {
     // 类型：HexColor；默认值：#000000
     // 导航栏背景颜色，如"#000000"
-    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarBackgroundColor": "#0090ff",
     // 类型：String；默认值：white
     // 导航栏标题颜色，仅支持 black/white
-    "navigationBarTextStyle": "black",
+    "navigationBarTextStyle": "#fff",
     // 类型：String；默认值：无
     // 导航栏标题文字内容
-    "navigationBarTitleText": "WeApp Boilerplate",
+    "navigationBarTitleText": "FACTURA",
     // 类型：HexColor；默认值：#ffffff
     // 窗口的背景色
-    "backgroundColor": "#000000",
+    "backgroundColor": "#d3e1fe",
     // 类型：String；默认值：dark
     // 下拉背景字体、loading 图的样式，仅支持 dark/light
-    "backgroundTextStyle": "light",
+    "backgroundTextStyle": "dark",
     // 类型：Boolean；默认值：false
     // 是否开启下拉刷新，详见页面相关事件处理函数。
     // https://mp.weixin.qq.com/debug/wxadoc/dev/framework/app-service/page.html?t=1476197491005#页面相关事件处理函数
@@ -36,19 +39,25 @@
     "color": "#999999",
     "selectedColor": "#35495e",
     "borderStyle": "white",
-    "backgroundColor": "#f5f5f5",
+    "backgroundColor": "#fff",
     "list": [
       {
-        "text": "HOME",
+        "text": "主页",
         "pagePath": "pages/home/home",
-        "iconPath": "images/icon_component.png",
-        "selectedIconPath": "images/icon_component_HL.png"
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home-selected.png"
       },
+      /*{
+        "text": "发票列表",
+        "pagePath": "pages/invoicelist/invoicelist",
+        "iconPath": "images/list.png",
+        "selectedIconPath": "images/list-selected.png"
+      },*/
       {
-        "text": "DEMO",
-        "pagePath": "pages/demo/demo",
-        "iconPath": "images/icon_API.png",
-        "selectedIconPath": "images/icon_API_HL.png"
+        "text": "我的信息",
+        "pagePath": "pages/myinfo/myinfo",
+        "iconPath": "images/my.png",
+        "selectedIconPath": "images/my-selected.png"
       }
     ]
   },

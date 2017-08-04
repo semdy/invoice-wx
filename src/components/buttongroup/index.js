@@ -21,12 +21,6 @@ module.exports = {
 
   },
 
-  onButtonItemClick(e){
-    this.childrens.buttongroup.setData({
-      activeIndex: e.currentTarget.id
-    });
-  },
-
   // 组件私有方法
   methods: {
 

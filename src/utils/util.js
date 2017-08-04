@@ -25,4 +25,28 @@ function formatDate (source, format) {
   return format
 }
 
-module.exports = { formatDate }
+function showError(msg, duration){
+  wx.showToast({
+    title: msg,
+    image: '../../images/error.png',
+    duration: duration || 3000
+  })
+}
+
+function confirm(msg){
+  return new Promise((resolve, reject) => {
+    wx.showModal({
+      title: '提示',
+      content: msg,
+      success: function(res) {
+        if (res.confirm) {
+          resolve(true);
+        } else if (res.cancel) {
+          reject(false);
+        }
+      }
+    })
+  });
+}
+
+module.exports = { formatDate, showError, confirm }

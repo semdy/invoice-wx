@@ -3,7 +3,10 @@
 /*@import "../../components/listgroup/index.wxss";*/
 
 .index-main{
+  position: relative;
   padding: 24rpx 10rpx;
+  flex: 1;
+  overflow: hidden;
 }
 
 .top-main{
@@ -15,7 +18,15 @@
 }
 
 .circle-pie{
-  flex: 1
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle-canvas{
+  width: 196rpx;
+  height: 196rpx;
 }
 
 .filter-buttons{
@@ -24,4 +35,30 @@
 
 .index-entrace{
 
+}
+
+.index-footer{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -40rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.index-camera-wrap{
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 160rpx;
+  padding-top: 20rpx;
+  background-color: #fff;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+
+  &:active{
+    opacity: .6;
+  }
 }

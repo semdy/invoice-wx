@@ -1,0 +1,159 @@
+/*@import "../../components/button/index.wxss";*/
+/*@import "../../components/icon/index.wxss";*/
+
+.detail-wrapper{
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 20rpx 10rpx 10rpx;
+}
+
+.imgView-container {
+  height: 280rpx;
+  overflow: hidden;
+
+  image{
+    width: 100%;
+    transform: rotate(-90deg) translateX(25%);
+  }
+}
+
+.detai-list-wrapper{
+  position: relative;
+  height: 100%;
+  background-color: #ffffff;
+  border-radius: 8rpx;
+}
+
+.swiper-item-thumb{
+  display: flex;
+  justify-content: center;
+  padding: 20rpx 0;
+
+  > view{
+    display: flex;
+    height: 68rpx;
+    padding-left: 40rpx;
+    padding-right: 40rpx;
+    border:2rpx solid #38adff;
+    color: #38adff;
+    background-color: #fff;
+    margin-left: -2rpx;
+    justify-content: center;
+    align-items: center;
+    width: 160rpx;
+
+    &:last-child{
+      border-top-right-radius: 8rpx;
+      border-bottom-right-radius: 8rpx;
+    }
+
+    &:first-child{
+      border-top-left-radius: 8rpx;
+      border-bottom-left-radius: 8rpx;
+    }
+
+    &.selected{
+      background-color: #38adff;
+      color: #fff;
+    }
+  }
+}
+
+.detail-swiper{
+  flex: 1;
+}
+
+.detail-swiper-item{
+  display: flex;
+  box-sizing: border-box;
+
+  &.left{
+    padding: 16rpx;
+    border-radius: 8rpx;
+    background-color: #fff;
+    flex-direction: column
+  }
+}
+
+.detail-list-item{
+  display: flex;
+  flex: 1;
+}
+
+.detail-item-label{
+  width: 260rpx;
+  padding: 24rpx 16rpx;
+}
+
+.detail-item-content{
+  flex: 1;
+  padding: 24rpx 16rpx;
+  border-bottom: 2rpx solid #eee;
+}
+
+.detail-list-footer{
+  display: flex;
+  justify-content: center;
+  margin-top: 20rpx;
+}
+
+.detail-upload-button{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 240rpx;
+  height: 240rpx;
+  background-color: #eee;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 240rpx;
+
+  &:active{
+    opacity: .6;
+  }
+}
+
+.upload-hint-text{
+  font-size: 24rpx;
+}
+
+.detail-query-footer{
+  position: absolute;
+  right: 20rpx;
+  bottom: 0;
+  padding: 16rpx;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 24rpx;
+}
+
+.sales-item-panel{
+  background-color: #ffffff;
+  border-radius: 8rpx;
+  margin-bottom: 10rpx;
+  padding-right: 10rpx;
+  padding-bottom: 10rpx;
+
+  .detail-item-label{
+    width: auto;
+  }
+}
+
+.detail-item-inline{
+  display: flex;
+}
+
+.invoice-scrollview{
+  display: flex;
+  flex:1;
+  flex-direction: column;
+}
+
+.sales-scrollview{
+  flex:1;
+  margin-bottom: 60rpx;
+}

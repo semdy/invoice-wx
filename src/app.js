@@ -6,7 +6,7 @@
  */
 const wechat = require('./utils/wechat')
 
-require('pollyfill/index');
+require('./pollyfill/index');
 require('./libs/wx-component/index');
 
 const showError = require('./utils/util').showError;
@@ -59,13 +59,13 @@ App({
    * 当小程序启动，或从后台进入前台显示，会触发 onShow
    */
   onShow () {
-    console.log(' ========== Application is showed ========== ')
+    
   },
   /**
    * 生命周期函数--监听小程序隐藏
    * 当小程序从前台进入后台，会触发 onHide
    */
   onHide () {
-    console.log(' ========== Application is hid ========== ')
+    
   }
 })

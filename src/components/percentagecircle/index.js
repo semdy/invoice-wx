@@ -37,18 +37,17 @@ var Tween = function(target, toAttrs, duration, ease, onUpdate, callback){
 var Circle = function(canvasId, options={}){
   this.context = wx.createCanvasContext(canvasId);
   this.options = Object.assign({}, defaultOptions, options);
-  var that = this;
 
   for(var i in this.options){
     Object.defineProperty(this, i, {
       set: function (newValue) {
         if( this.options[i] !== newValue ) {
           if( i === 'percent' ){
-            Tween(this.options, {percent: newValue}, 600, CircEaseInOut, that.render.bind(this));
+            Tween(this.options, {percent: newValue}, 600, CircEaseInOut, this.render.bind(this));
           }
           else {
             this.options[i] = newValue;
-            that.render();
+            this.render();
           }
         }
       }

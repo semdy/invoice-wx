@@ -30,8 +30,8 @@
                    placeholder="请输入发票代码"
                    data-key="invoiceCode"
                    value="{{invoiceData.invoiceCode}}"
-                   bindinput="onInvoiceChange">
-            </input>
+                   bindinput="onInvoiceChange"
+            />
           </view>
         </view>
         <view class="detail-list-item">
@@ -44,8 +44,8 @@
                    placeholder="请输入发票号码"
                    data-key="invoiceNumber"
                    value="{{invoiceData.invoiceNumber}}"
-                   bindinput="onInvoiceChange">
-            </input>
+                   bindinput="onInvoiceChange"
+            />
           </view>
         </view>
         <view class="detail-list-item">
@@ -72,8 +72,8 @@
                    placeholder="请输入税前金额"
                    data-key="invoicePrice"
                    value="{{invoiceData.total.total}}"
-                   bindinput="onInvoiceChange">
-            </input>
+                   bindinput="onInvoiceChange"
+            />
           </view>
         </view>
         <view class="detail-list-item">
@@ -87,8 +87,8 @@
                    placeholder="请输入检验码后六位"
                    data-key="correctCode"
                    value="{{invoiceData.correctCode}}"
-                   bindinput="onInvoiceChange">
-            </input>
+                   bindinput="onInvoiceChange"
+            />
           </view>
         </view>
         <view class="detail-list-item">

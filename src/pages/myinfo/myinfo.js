@@ -11,7 +11,7 @@ Page({
     data: {}
   },
 
-  handleSubmit(){
+  onButtonTap(){
 
     if( this.data.isEditing ) return;
 

@@ -7,11 +7,11 @@
   <view class="login-form-wrapper">
     <view class="login-item">
       <view class="login-lebel">用户名</view>
-      <input class="input large plain" placeholder="请输入用户名" bindfocus="onFocus" bindinput="onUsernameInput"></input>
+      <input class="input large plain" placeholder="请输入用户名" bindfocus="onFocus" bindinput="onUsernameInput"/>
     </view>
     <view class="login-item">
       <view class="login-lebel">密码</view>
-      <input class="input large plain" password="{{true}}" placeholder="请输入密码" bindfocus="onFocus" bindinput="onPasswordInput"></input>
+      <input class="input large plain" password="{{true}}" placeholder="请输入密码" bindfocus="onFocus" bindinput="onPasswordInput"/>
     </view>
   </view>
   <view class="help-block" wx:if="{{errMsg!==''}}">{{errMsg}}</view>

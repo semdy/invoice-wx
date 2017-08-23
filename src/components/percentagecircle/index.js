@@ -58,9 +58,6 @@ var Circle = function(canvasId, options={}){
 }
 
 Circle.prototype = {
-  tweenTo(toVal, callback){
-
-  },
   render(){
     var context = this.context;
     var options = this.options;

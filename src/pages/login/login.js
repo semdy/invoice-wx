@@ -1,42 +1,36 @@
 // 获取全局应用程序实例对象
-// const app = getApp()
-import {showError} from '../../utils/util';
-import {login, session} from '../../service/auth';
+const app = getApp()
+import {login} from '../../service/user';
 
 // 创建页面实例对象
 Page({
-  /**
-   * 页面的初始数据
-   */
   data: {
-    usernameVal: '',
-    passwordVal: '',
     errMsg: '',
     isLogining: false
   },
 
+  usernameVal: '',
+  passwordVal: '',
+
   onUsernameInput(e){
-    this.setData({
-      usernameVal: e.detail.value
-    });
+    this.usernameVal = e.detail.value;
   },
 
   onPasswordInput(e){
-    this.setData({
-      passwordVal: e.detail.value
-    });
+    this.passwordVal = e.detail.value;
   },
 
-  onButtonTap(){
+  onButtonTap() {
 
-    if( this.data.isLogining ) return;
+    if (this.data.isLogining) return;
 
-    if( !this.data.usernameVal ) {
+    if (!this.usernameVal) {
       return this.setData({
         errMsg: '请输入用户名'
       })
     }
-    if( !this.data.passwordVal ) {
+
+    if (!this.passwordVal) {
       return this.setData({
         errMsg: '请输入密码'
       })
@@ -46,12 +40,11 @@ Page({
       isLogining: true
     });
 
-    login(this.data.usernameVal, this.data.passwordVal).then(userinfo => {
+    login(this.usernameVal, this.passwordVal, app.data.userInfo.openid).then((res) => {
       wx.switchTab({
         url: '/pages/home/home'
-      })
+      });
     }, errMsg => {
-      showError(errMsg);
       this.setData({
         isLogining: false
       });
@@ -68,7 +61,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad () {
-    // TODO: onLoad
+
   },
 
   /**

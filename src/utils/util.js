@@ -33,6 +33,13 @@ function showError(msg, duration){
   })
 }
 
+function showToast(msg, duration){
+  wx.showToast({
+    title: msg,
+    duration: duration || 1500
+  })
+}
+
 function confirm(msg){
   return new Promise((resolve, reject) => {
     wx.showModal({
@@ -49,4 +56,4 @@ function confirm(msg){
   });
 }
 
-module.exports = { formatDate, showError, confirm }
+module.exports = { formatDate, showError, showToast, confirm }

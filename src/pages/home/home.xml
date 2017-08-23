@@ -5,8 +5,13 @@
 <view class="page">
   <view class="index-main">
     <view class="top-main">
-      <view class="circle-pie">
-        <canvas class="circle-canvas" canvas-id="percentage-pie"></canvas>
+      <view class="circle-pie-wrap">
+        <view class="circle-pie">
+          <canvas class="circle-canvas" canvas-id="percentage-pie"></canvas>
+          <text class="circle-text">
+            {{formula}}
+          </text>
+        </view>
       </view>
       <view class="filter-buttons">
         <template is="buttongroup" data="{{...buttongroup}}"></template>

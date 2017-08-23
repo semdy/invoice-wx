@@ -1,62 +1,64 @@
 
-import {showError, confirm} from '../../utils/util';
+import {showError, showToast, confirm} from '../../utils/util';
 import fetch, {serverUrl} from '../../service/fetch';
 import {session} from '../../service/auth';
+import {uploadFile} from '../../utils/wechat';
 
 // 获取全局应用程序实例对象
 // const app = getApp()
 
-// 创建页面实例对象
 Page({
-  /**
-   * 页面的初始数据
-   */
   data: {
     imgHeight: wx.getSystemInfoSync().windowWidth,
     tabIndex: 0,
-    picturePath: "xxx",
-    invoiceData: [],
+    picturePath: "",
+    invoiceData: {},
     prodData: [],
     canUpdate: false
   },
 
   invoiceId: null,
-  invoiceNumber: null,
-  isInit: null,
+  isInit: true,
 
   handleDel(){
     confirm("确定要删除吗?").then(() => {
-      this.doDel(this.invoiceId, this.invoiceNumber);
+      this.doDel(this.invoiceId);
     }, function(){});
   },
 
-  doDel(invoice, number){
-    fetch.post("delInvoice", {invoice: [invoice], number: [number]}).then(data => {
-      if( data === true ) {
+  doDel(invoiceId){
+    let params = {
+      invoice: [invoiceId]
+    };
+    fetch.post("invoice-remove", params).then(data => {
+      if( data.success ) {
         this.handleGoBack();
       } else {
-        showError("删除失败: " + (data.message||""));
+        showError(data.message);
       }
-    }, (errMsg) => {
-      showError(errMsg);
     });
+
   },
 
-  fetchData(invoice, number){
-    let params = {invoice, number};
-    fetch.get("invoiceInfo", params).then(data => {
-      this._setData(data);
+  fetchData(invoiceId){
+    fetch.get(`invoice/${invoiceId}/`).then(res => {
+      if(res.success){
+        this._setData(res.data);
+      } else {
+        showError(res.message);
+      }
     });
   },
 
   _setData(data){
-    let invoiceData = [];
-    let prodData = data.sales||[];
+    let invoiceData = data.invoice;
+    let prodData = data.salse||[];
+    invoiceData['invoicePrice'] = invoiceData.total.total;
     let state = {
       invoiceData,
       prodData,
       picturePath: data.fp_path,
-      canUpdate: invoiceData.some(item => item.editable === true) || false
+      canUpdate: ['codeMark','numberMark','issueDateMark','totalMark','correctMark'].some(key => invoiceData[key] == 1)
     };
 
     if( this.isInit ){
@@ -67,13 +69,19 @@ Page({
   },
 
   refresh(){
-    this.fetchData(this.invoiceId, this.invoiceNumber);
+    this.fetchData(this.invoiceId);
   },
 
   handleGoBack(){
-    wx.navigateTo({
-      url: "/pages/invoicelist/invoicelist"
-    });
+    wx.navigateBack();
+    //获得当前页面的栈
+    let currPages = getCurrentPages();
+    //获得列表页的实例
+    let listPage = currPages[currPages.length - 2];
+    if( listPage ){
+      //刷新列表页
+      listPage.refresh();
+    }
   },
 
   changeTab(e){
@@ -94,25 +102,33 @@ Page({
 
   onThumbTap(){
     wx.previewImage({
-      urls:[serverUrl + this.state.picturePath]
+      urls:[serverUrl + this.data.picturePath]
     });
   },
 
   handleUpdate(){
-    if( !this.state.canUpdate ) return;
+    if( !this.data.canUpdate ) return;
 
-    let params = {
-      customer: session.get().id,
-      invoice: this.invoiceId,
-      number: this.invoiceNumber
-    };
+    let invoiceInfo = {};
+    let data = this.data.invoiceData;
 
-    this.state.invoiceData.forEach(item => {
-      if( item.editable ){
-        params[item.paramKey] = this.refs.invoicetable.getValueByKey(item.key);
-      }
+    [
+      'invoiceCode',
+      'invoiceNumber',
+      'issueDate',
+      'invoicePrice',
+      'correctCode'
+    ].forEach(key => {
+        invoiceInfo[key] = data[key];
     });
+    
+    let params = Object.assign({
+      type: data.type,
+      isInvoice: data.isInvoice,
+      invoiceId: this.invoiceId
+    }, invoiceInfo);
 
+    console.log(params)
     if(params.invoicePrice !== undefined && !/^\d+(\.)?\d*$/.test(params.invoicePrice)){
       return showError("请输入合法的税前金额");
     }
@@ -129,35 +145,24 @@ Page({
       return showError("请输入后6位的校验码");
     }
 
-    fetch.post("upInvoice", params).then(data => {
-      if (data === true) {
-        wx.showToast({title: "更新成功"});
+    fetch.post("invoice-update", params).then(res => {
+      if (res.success) {
         this.refresh();
       } else {
-        showError("更新失败");
+        showError(res.message);
       }
-    }, errMsg => {
-      showError("服务器响应出错");
     })
   },
 
   handleUploadSales(){
-    let navParams = {
-      mode: 'camera',
-      uploadType: "uploadSales",
-      invoiceInfo: {
-        id: this.invoiceId,
-        number: this.invoiceNumber
-      }
-    };
     wx.chooseImage({
       count: 1, // 默认9
       sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
       sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
       success: (res) => {
         // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-        let imgFile = res.tempFiles[0];
-        this.captureDone(imgFile);
+        let imgFilePath = res.tempFilePaths[0];
+        this.uploadSales(imgFilePath);
       },
       fail: () => {
         //showError("拍照调用失败");
@@ -165,39 +170,40 @@ Page({
     })
   },
 
-  captureDone(file){
-    this.uploadSales(file).then(() => {
-      this.refresh();
-      this.setData({
-        tabIndex: 0
-      });
+  uploadSales(filePath){
+    let params = {
+      invoice: this.invoiceId
+    };
+   
+    return uploadFile('sales-upload', filePath, params).then(data =>{
+      if( data.success ){
+        this.refresh();
+        this.setData({
+          tabIndex: 0
+        });
+      } else {
+        showError(data.message);
+      }
+    }, err => {
+      showError(err);
     });
   },
 
-  uploadSales(file){
-    let params = {
-      number: this.invoiceNumber,
-      invoice: this.invoiceId,
-      file: file
-    };
-    return fetch.post("uploadSales", params).then(data => {
-      if( data === true ){
-        wx.showToast("上传成功");
-      } else {
-        showError("上传失败 ");
-      }
-
-    }, errMsg => {
-      showError("上传失败, 请重试!");
-    });
+  onInvoiceChange(e){
+    let key = e.currentTarget.dataset.key;
+    if( key ){
+      let obj = this.data.invoiceData;
+      obj[key] = e.detail.value;
+      this.setData({
+        invoiceData: obj
+      });
+    }
   },
 
   onLoad (params) {
     this.invoiceId = params.id;
-    this.invoiceNumber = params.number;
     this.refresh();
   },
-
   onPullDownRefresh () {
     this.refresh();
   }

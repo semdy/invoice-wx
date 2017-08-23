@@ -1,20 +1,20 @@
 // 获取全局应用程序实例对象
 const app = getApp()
 
-import PercentageCircle from "../../components/percentagecircle/index";
+import PercentageCircle from '../../components/percentagecircle/index';
 import fetch from '../../service/fetch';
 import {session} from '../../service/auth';
-import {showError} from '../../utils/util';
+import {showError,showToast} from '../../utils/util';
 
 function parseDate(dateStr){
   dateStr = String(dateStr);
-  return dateStr.substring(0, 4) + "-" + dateStr.substring(4, 6) + "-" + dateStr.substring(6, dateStr.length);
+  return dateStr.substring(0, 4) + '-' + dateStr.substring(4, 6) + '-' + dateStr.substring(6, dateStr.length);
 }
 
 Page({
   data: {
     percent: 0,
-    formula: "0/0",
+    formula: '0/0',
     data: {
       sum: 0,
       statusTotal: []
@@ -130,14 +130,17 @@ Page({
   },
 
   fetchData(day){
-    let params = {customer: session.get().id};
+    let params = {
+    };
     if( day !== undefined ){
       params.day = day;
     }
-    fetch.get("invoiceCount", params).then(data => {
-      this._setData(data);
-    }, err => {
-
+    fetch.get('invoice-count', params).then(res => {
+      if( res.success ) {
+        this._setData(res.data);
+      } else {
+        showError(res.message);
+      }
     });
   },
 
@@ -165,7 +168,8 @@ Page({
   _parseInvoiceInfo(data){
     let codes = data.split(",");
     return {
-      customer: session.get().id,
+      QR: true,
+      qrDetail: data,
       invoiceCode: codes[2],
       invoiceNumber: codes[3],
       invoicePrice: codes[4],
@@ -175,17 +179,17 @@ Page({
   },
 
   uploadBarCode(data, goBack) {
-    fetch.post("upload", this._parseInvoiceInfo(data)).then(data => {
-      if (data === true) {
-        wx.showToast("上传成功");
+    fetch.post('invoice-upload', this._parseInvoiceInfo(data)).then(res => {
+      if (res.success) {
+        showToast(res.message);
         if (!goBack) {
           this.launchScaner();
         }
       } else {
-        showError("该发票已存在");
+        showError(res.message);
       }
     }, errMsg => {
-      showError("上传失败, 请重试!");
+      showError('上传失败, 请重试!');
     });
   },
 
@@ -195,14 +199,14 @@ Page({
         this.onBarcodeRead(res);
       },
       fail: () => {
-        //showError("扫码调用失败");
+        //showError('扫码调用失败');
       }
     });
   },
 
   onBarcodeRead(e){
     let isExpectQrcode = true;
-    let ret = e.result.split(",");
+    let ret = e.result.split(',');
     if (ret.length < 3) {
       isExpectQrcode = false;
     }
@@ -217,22 +221,22 @@ Page({
       wx.showModal({
         title: '二维码识别成功',
         content: e.result,
-        confirmText: "下一张",
-        cancelText: "完成",
+        confirmText: '下一张',
+        cancelText: '完成',
         success: (res) => {
           if (res.confirm) {
-            this.uploadBarCode(e.data, false)
+            this.uploadBarCode(e.result, false)
           } else if (res.cancel) {
-            this.uploadBarCode(e.data, true)
+            this.uploadBarCode(e.result, true)
           }
         }
       });
     } else {
       wx.showModal({
         title: '二维码识别失败',
-        content: "请扫描发票左上角二维码",
-        confirmText: "重新扫描",
-        cancelText: "取消",
+        content: '请扫描发票左上角二维码',
+        confirmText: '重新扫描',
+        cancelText: '取消',
         success: (res) => {
           if (res.confirm) {
             this.launchScaner();
@@ -248,17 +252,25 @@ Page({
     })
   },
 
-  onLoad () {
-    app.getUserInfo()
-      .then(info => this.setData({userInfo: info}))
-      .catch(console.info);
+  onIconClick(){
+    
+  },
 
-    wx.setStorageSync('session',{"name":"阙天咨询","username":"admin","role":2,"email":"steven.sibai@qtdatas.com","phone":"13761450327","id":"59280dd72001a64700fee81d"})
+  onLoad () {
+    if( !session.get() ){
+      wx.redirectTo({
+        url: '/pages/login/login'
+      });
+    } else {
+      this.circle = new PercentageCircle('percentage-pie', {percent: 0, radius: 40, borderWidth: 12});
+      this.handleRefresh();
+    }
   },
 
   onReady () {
-    this.circle = new PercentageCircle('percentage-pie', {percent: 0, radius: 40, borderWidth: 12});
-    this.handleRefresh();
+    wx.setNavigationBarTitle({
+      title: `主页 - 欢迎 ${session.get().nickName}`
+    });
   },
 
   onPullDownRefresh () {

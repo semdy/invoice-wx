@@ -64,9 +64,13 @@ gulp.task('compile:js', () => {
   return gulp.src(['src/**/*.js'])
     //.pipe(plugins.sourcemaps.init())
     .pipe(plugins.babel())
+    .on('error', function(){
+      this.end();
+    })
     .pipe(plugins.if(isProduction, plugins.uglify()))
     //.pipe(plugins.sourcemaps.write('.'))
     .pipe(gulp.dest('dist'))
+
 })
 
 /**
@@ -97,6 +101,9 @@ gulp.task('compile:less', () => {
   return gulp.src(['src/**/*.less'])
     //.pipe(plugins.sourcemaps.init())
     .pipe(plugins.less())
+    .on('error', function(){
+      this.end();
+    })
     .pipe(plugins.replace(/\/\*(@import[\s\S]+?)\*\//gm, "$1"))
     .pipe(plugins.if(isProduction, plugins.cssnano({ compatibility: '*' })))
     .pipe(plugins.rename({ extname: '.wxss' }))

@@ -3,13 +3,13 @@
 
 <view class="detail-wrapper">
   <view class="imgView-container">
-    <image src="../../images/20170803105349.jpg"
-           data-src="../../images/20170803105349.jpg"
+    <image wx:if="{{invoiceData.fp_path}}" src="{{invoiceData.fp_path}}"
            mode="aspectFit"
            style="height: {{imgHeight}}px"
            bindtap="onThumbTap"
     >
     </image>
+    <text wx:if="{{!invoiceData.fp_path}}">此发票通过二维码识别</text>
   </view>
 
   <view class="swiper-item-thumb">
@@ -22,36 +22,92 @@
       <scroll-view scroll-y="true" class="invoice-scrollview">
         <view class="detail-list-item">
           <view class="detail-item-label">发票代码</view>
-          <view class="detail-item-content">2390230</view>
+          <view class="detail-item-content" wx:if="{{invoiceData.codeMark==0}}">
+            <text>{{invoiceData.invoiceCode}}</text>
+          </view>
+          <view class="detail-item-content" wx:if="{{invoiceData.codeMark==1}}">
+            <input class="input normal"
+                   placeholder="请输入发票代码"
+                   data-key="invoiceCode"
+                   value="{{invoiceData.invoiceCode}}"
+                   bindinput="onInvoiceChange">
+            </input>
+          </view>
         </view>
         <view class="detail-list-item">
           <view class="detail-item-label">发票号码</view>
-          <view class="detail-item-content">2390230</view>
+          <view class="detail-item-content" wx:if="{{invoiceData.numberMark==0}}">
+            <text>{{invoiceData.invoiceNumber}}</text>
+          </view>
+          <view class="detail-item-content" wx:if="{{invoiceData.numberMark==1}}">
+            <input class="input normal"
+                   placeholder="请输入发票号码"
+                   data-key="invoiceNumber"
+                   value="{{invoiceData.invoiceNumber}}"
+                   bindinput="onInvoiceChange">
+            </input>
+          </view>
         </view>
         <view class="detail-list-item">
           <view class="detail-item-label">开票日期</view>
-          <view class="detail-item-content">2390230</view>
+          <view class="detail-item-content" wx:if="{{invoiceData.issueDateMark==0}}">
+            <text>{{invoiceData.issueDate}}</text>
+          </view>
+          <view class="detail-item-content" wx:if="{{invoiceData.issueDateMark==1}}">
+            <picker mode="date" data-key="issueDate" bindchange="onInvoiceChange" value="{{invoiceData.issueDate}}">
+              <view class="picker normal">
+                <text>{{invoiceData.issueDate}}</text>
+              </view>
+            </picker>
+          </view>
         </view>
         <view class="detail-list-item">
           <view class="detail-item-label">税前金额</view>
-          <view class="detail-item-content">2390230</view>
+          <view class="detail-item-content" wx:if="{{invoiceData.totalMark==0}}">
+            <text>{{invoiceData.total.total}}</text>
+          </view>
+          <view class="detail-item-content" wx:if="{{invoiceData.totalMark==1}}">
+            <input class="input normal"
+                   type="digit"
+                   placeholder="请输入税前金额"
+                   data-key="invoicePrice"
+                   value="{{invoiceData.total.total}}"
+                   bindinput="onInvoiceChange">
+            </input>
+          </view>
         </view>
         <view class="detail-list-item">
           <view class="detail-item-label">校验码后六位</view>
-          <view class="detail-item-content">2390230</view>
+          <view class="detail-item-content" wx:if="{{invoiceData.correctMark==0}}">
+            <text>{{invoiceData.correctCode}}</text>
+          </view>
+          <view class="detail-item-content" wx:if="{{invoiceData.correctMark==1}}">
+            <input class="input normal"
+                   type="number"
+                   placeholder="请输入检验码后六位"
+                   data-key="correctCode"
+                   value="{{invoiceData.correctCode}}"
+                   bindinput="onInvoiceChange">
+            </input>
+          </view>
         </view>
         <view class="detail-list-item">
           <view class="detail-item-label">购买方名称</view>
-          <view class="detail-item-content">2390230</view>
+          <view class="detail-item-content">
+            <text>{{invoiceData.payerName}}</text>
+          </view>
         </view>
         <view class="detail-list-item">
           <view class="detail-item-label">销售方名称</view>
-          <view class="detail-item-content">2390230</view>
+          <view class="detail-item-content">
+            <text>{{invoiceData.sellerName}}</text>
+          </view>
         </view>
       </scroll-view>
       <view class="detail-list-footer">
         <view bindtap="handleUpdate">
-          <template is="button" data="{{size: 'small', text: '更新', type: 'disabled', style: 'width: 100rpx; flex: none'}}"></template>
+          <template wx:if="{{canUpdate}}" is="button" data="{{size: 'small', text: '更新', style: 'width: 100rpx; flex: none'}}"></template>
+          <template wx:else is="button" data="{{size: 'small', text: '更新', type: 'disabled', style: 'width: 100rpx; flex: none'}}"></template>
         </view>
         <view bindtap="handleDel" style="margin-left:30rpx;">
           <template is="button" data="{{size: 'small', text: '删除', style: 'width: 100rpx; flex: none'}}"></template>
@@ -61,108 +117,46 @@
 
     <swiper-item class="detail-swiper-item">
       <scroll-view scroll-y="true" class="sales-scrollview">
-        <view class="detai-list-wrapper">
+        <view class="detai-list-wrapper" wx:if="{{prodData.length==0}}">
             <view class="detail-upload-button" bindtap="handleUploadSales">
               <template is="icon" data="{{name: 'plus', size: 'large'}}"></template>
               <text class="upload-hint-text">请拍摄销货清单</text>
             </view>
         </view>
-        <!--<view class="sales-item-panel">
+        <view class="sales-item-panel" wx:if="{{prodData.length>0}}" wx:for="{{prodData}}" wx:key="index">
           <view class="detail-list-item">
             <view class="detail-item-label">货物名称</view>
-            <view class="detail-item-content">消费</view>
+            <view class="detail-item-content">{{item.name}}</view>
           </view>
           <view class="detail-list-item">
             <view class="detail-item-label">规格型号</view>
-            <view class="detail-item-content">2017-07</view>
+            <view class="detail-item-content">{{item.type}}</view>
           </view>
           <view class="detail-item-inline">
             <view class="detail-list-item">
               <view class="detail-item-label">单位</view>
-              <view class="detail-item-content"></view>
+              <view class="detail-item-content">{{item.unit}}</view>
             </view>
             <view class="detail-list-item">
               <view class="detail-item-label">数量</view>
-              <view class="detail-item-content">1</view>
+              <view class="detail-item-content">{{item.total}}</view>
             </view>
           </view>
           <view class="detail-item-inline">
             <view class="detail-list-item">
               <view class="detail-item-label">单价</view>
-              <view class="detail-item-content">23232</view>
+              <view class="detail-item-content">{{item.price}}</view>
             </view>
             <view class="detail-list-item">
               <view class="detail-item-label">税额</view>
-              <view class="detail-item-content">3.21</view>
+              <view class="detail-item-content">{{item.tax}}</view>
             </view>
           </view>
         </view>
-
-        <view class="sales-item-panel">
-          <view class="detail-list-item">
-            <view class="detail-item-label">货物名称</view>
-            <view class="detail-item-content">消费</view>
-          </view>
-          <view class="detail-list-item">
-            <view class="detail-item-label">规格型号</view>
-            <view class="detail-item-content">2017-07</view>
-          </view>
-          <view class="detail-item-inline">
-            <view class="detail-list-item">
-              <view class="detail-item-label">单位</view>
-              <view class="detail-item-content"></view>
-            </view>
-            <view class="detail-list-item">
-              <view class="detail-item-label">数量</view>
-              <view class="detail-item-content">1</view>
-            </view>
-          </view>
-          <view class="detail-item-inline">
-            <view class="detail-list-item">
-              <view class="detail-item-label">单价</view>
-              <view class="detail-item-content">23232</view>
-            </view>
-            <view class="detail-list-item">
-              <view class="detail-item-label">税额</view>
-              <view class="detail-item-content">3.21</view>
-            </view>
-          </view>
-        </view>
-
-        <view class="sales-item-panel">
-          <view class="detail-list-item">
-            <view class="detail-item-label">货物名称</view>
-            <view class="detail-item-content">消费</view>
-          </view>
-          <view class="detail-list-item">
-            <view class="detail-item-label">规格型号</view>
-            <view class="detail-item-content">2017-07</view>
-          </view>
-          <view class="detail-item-inline">
-            <view class="detail-list-item">
-              <view class="detail-item-label">单位</view>
-              <view class="detail-item-content"></view>
-            </view>
-            <view class="detail-list-item">
-              <view class="detail-item-label">数量</view>
-              <view class="detail-item-content">1</view>
-            </view>
-          </view>
-          <view class="detail-item-inline">
-            <view class="detail-list-item">
-              <view class="detail-item-label">单价</view>
-              <view class="detail-item-content">23232</view>
-            </view>
-            <view class="detail-list-item">
-              <view class="detail-item-label">税额</view>
-              <view class="detail-item-content">3.21</view>
-            </view>
-          </view>
-        </view>-->
       </scroll-view>
 
       <view class="detail-query-footer">
-        <text>查询结果: 0条</text>
+        <text>查询结果: {{prodData.length}}条</text>
       </view>
 
     </swiper-item>

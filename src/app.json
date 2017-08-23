@@ -37,7 +37,7 @@
   // https://mp.weixin.qq.com/debug/wxadoc/dev/framework/config.html#tabBar
   "tabBar": {
     "color": "#999999",
-    "selectedColor": "#35495e",
+    "selectedColor": "#38adff",
     "borderStyle": "white",
     "backgroundColor": "#fff",
     "list": [
@@ -54,7 +54,7 @@
         "selectedIconPath": "images/list-selected.png"
       },*/
       {
-        "text": "我的信息",
+        "text": "我的",
         "pagePath": "pages/myinfo/myinfo",
         "iconPath": "images/my.png",
         "selectedIconPath": "images/my-selected.png"

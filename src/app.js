@@ -9,19 +9,16 @@ const wechat = require('./utils/wechat')
 require('pollyfill/index');
 require('./libs/wx-component/index');
 
+const showError = require('./utils/util').showError;
+
 App({
   /**
    * Global shared
    * 可以定义任何成员，用于在整个应用中共享
    */
   data: {
-    name: 'WeApp Boilerplate',
-    version: '0.1.0',
     userInfo: null
   },
-
-  // 不是只能定义`data`，别的也可以
-  other: 'other variables',
 
   /**
    * 获取用户信息
@@ -29,13 +26,24 @@ App({
    */
   getUserInfo () {
     return new Promise((resolve, reject) => {
-      if (this.data.userInfo) return reject(this.data.userInfo)
+      if (this.data.userInfo) return reject(this.data.userInfo);
+
+      wx.showLoading({
+        mask: true,
+        title: '请稍候...'
+      });
+
       wechat.login()
-        .then(() => wechat.getUserInfo())
-        .then(res => res.userInfo)
-        .then(info => (this.data.userInfo = info))
+        .then((res) => wechat.getUserInfo(res))
+        .then(res => (this.data.userInfo = res.userInfo))
         .then(info => resolve(info))
-        .catch(error => console.error('failed to get user info, error: ' + error))
+        .catch(error => {
+          console.error('failed to get user info, error: ' + JSON.stringify(error));
+          setTimeout(function () {
+            showError('用户信息获取失败！');
+          })
+        })
+        .finally(wx.hideLoading);
     })
   },
 
@@ -44,7 +52,7 @@ App({
    * 当小程序初始化完成时，会触发 onLaunch（全局只触发一次）
    */
   onLaunch () {
-    console.log(' ========== Application is launched ========== ')
+    this.getUserInfo();
   },
   /**
    * 生命周期函数--监听小程序显示

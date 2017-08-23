@@ -15,7 +15,7 @@
     <picker bindchange="onRangePickerChange" value="{{rangeIndex}}" range="{{rangeArray}}">
       <view class="picker normal" style="width: 100%">
         <text>{{rangeArray[rangeIndex]}}</text>
-        <template is="icon" data="{{size: 'small', name: 'angle-down-black', style: 'opacity: .5'}}"></template>
+        <template is="icon" data="{{size: 'x-small', name: 'angle-down-black', style: 'opacity: .5'}}"></template>
       </view>
     </picker>
   </view>
@@ -24,7 +24,7 @@
     <picker bindchange="onStatusPickerChange" value="{{statusIndex}}" range="{{statusArray}}">
       <view class="picker normal">
         <text>{{statusArray[statusIndex]}}</text>
-        <template is="icon" data="{{size: 'small', name: 'angle-down-black', style: 'opacity: .5'}}"></template>
+        <template is="icon" data="{{size: 'x-small', name: 'angle-down-black', style: 'opacity: .5'}}"></template>
       </view>
     </picker>
   </view>
@@ -38,57 +38,29 @@
   </view>
 
   <scroll-view scroll-y="true" style="height: {{scrollHeight}}px" bindscrolltolower="onEndReached">
-    <view class="item-panel">
+    <view class="item-panel" wx:for="{{data}}" wx:key="item.dateNumber">
       <view class="date-style">
         <image class="date-line" src="../../images/dash-line.png" mode="top"></image>
-        <text class="date-text-style">2017-09-08</text>
+        <text class="date-text-style">{{item.date}}</text>
       </view>
 
-      <view class="table-row" data-index="1|2" bindtap="onRowTap">
+      <view class="table-row" data-index="{{item.lineNumber-1}}" bindtap="onRowTap" wx:for="{{item.list}}" wx:key="item.id">
         <view class="line-number">
-          <checkbox-group data-index="1|2" bindchange="onCheckboxChange">
+          <checkbox-group data-index="{{item.lineNumber-1}}" bindchange="onCheckboxChange">
             <checkbox value="1" catchtap="onCheckboxClick"/>
           </checkbox-group>
-          <text>0</text>
+          <text>{{item.lineNumber}}</text>
         </view>
         <view class="table-cell">
-          3324343
+          {{item.invoiceNumber}}
         </view>
-        <view class="table-cell cell-status">
-          查询中
-        </view>
-      </view>
-
-      <view class="table-row" data-index="1|2" bindtap="onRowTap">
-        <view class="line-number">
-          <checkbox-group data-index="1|2" bindchange="onCheckboxChange">
-            <checkbox value="1" catchtap="onCheckboxClick"/>
-          </checkbox-group>
-          <text>0</text>
-        </view>
-        <view class="table-cell">
-          3324343
-        </view>
-        <view class="table-cell cell-status">
-          查询中
+        <view class="table-cell cell-status" style="color: {{item.statusColor}}">
+          {{item.statusText}}
         </view>
       </view>
-      <view class="table-row" data-index="1|2" bindtap="onRowTap">
-        <view class="line-number">
-          <checkbox-group data-index="1|2" bindchange="onCheckboxChange">
-            <checkbox value="1" catchtap="onCheckboxClick"/>
-          </checkbox-group>
-          <text>0</text>
-        </view>
-        <view class="table-cell">
-          3324343
-        </view>
-        <view class="table-cell cell-status">
-          查询中
-        </view>
-      </view>
-
-
     </view>
   </scroll-view>
+  <view class="query-footer">
+      查询结果: {{total}}条
+  </view>
 </view>

@@ -72,18 +72,23 @@ const INVOICE_STATUS = {
   "waiting": {text: "查询中", color: "#666"}
 };
 
+function camelDate(dateNum){
+  return dateNum.substring(0, 4) + "-" + dateNum.substring(4,6) + "-" + dateNum.substring(6);
+};
+
 let keyIndex = 0;
 function object2Array(obj){
   let arr = [];
   for(let i in obj){
     arr.push({
-      date: i,
+      date: camelDate(i),
+      dateNumber: Number(i),
       key: keyIndex++,
       list: obj[i]
     });
   }
 
-  return arr;
+  return arr.sort((a, b) => b.dateNumber - a.dateNumber);
 }
 
 // 创建页面实例对象
@@ -96,7 +101,7 @@ Page({
     statusArray: STATUS_ARRAY.map(item => item.name),
     rangeIndex: 3,
     statusIndex: 0,
-    scrollHeight: wx.getSystemInfoSync().windowHeight - 272, //242
+    scrollHeight: wx.getSystemInfoSync().windowHeight - 202,
     code: "",
     invoiceDay: "",
     invoiceStatus: "",
@@ -107,7 +112,9 @@ Page({
 
   page: 1,
   dataMap: {},
+  dataArray: [],
   checkedItems: [],
+  lineNumber: 0,
 
   handleDel(){
     if( this.checkedItems.length === 0 )
@@ -120,26 +127,15 @@ Page({
 
   doDel(items){
     let params = {
-      invoice: items.map(item => item.invoice.id),
-      number: items.map(item => item.number)
+      invoice: items.map(item => item.id)
     };
-    fetch.post("delInvoice", params).then(data => {
-      if( data === true ) {
+    fetch.post("invoice-remove", params).then(data => {
+      if( data.success ) {
         this.handleQuery();
       } else {
-        showError("删除失败: " + (data.message||""));
+        showError(data.message);
       }
-    }, (errMsg) => {
-      showError(errMsg);
     });
-  },
-
-  handleCheck(item, isChecked){
-    item.checked = isChecked;
-    if( isChecked && !this.checkedItems.some(checked => checked.number === item.number) ) {
-      this.checkedItems.push(item);
-    }
-    this.checkedItems = this.checkedItems.filter(item => item.checked === true);
   },
 
   fetchData(invoiceNumber="", status="", day="", page=1){
@@ -148,28 +144,35 @@ Page({
     });
 
     let params = {
-      customer: session.get().id,
       invoiceNumber,
       status,
       day,
-      page
+      page,
+      limit: 10
     };
 
-    let data = this.dataMap;
+    fetch.get("invoice", params).then(res => {
+      if( !res.success ){
+        showError(res.message);
+      } else {
+        this.dataArray = this.dataArray.concat(res.data.docs);
+        res.data.docs.forEach(item => {
+          this.lineNumber++;
+          if( this.dataMap[item.date] === undefined ){
+            this.dataMap[item.date] = [];
+          }
+          item.statusText = INVOICE_STATUS[item.status].text;
+          item.statusColor = INVOICE_STATUS[item.status].color;
+          item.lineNumber = this.lineNumber;
+          this.dataMap[item.date].push(item);
+        });
 
-    fetch.get("invoiceList", params).then(res => {
-      res.invoiceList.forEach(item => {
-        if( data[item.date] === undefined ){
-          data[item.date] = [];
-        }
-        data[item.date].push(item);
-      });
-
-      this.setData({
-        data: object2Array(data),
-        total: res.sum,
-        loaded: true
-      });
+        this.setData({
+          data: object2Array(this.dataMap),
+          total: res.data.total,
+          loaded: true
+        });
+      }
     });
   },
 
@@ -204,8 +207,8 @@ Page({
 
   onCheckboxChange(e){
     let isChecked = e.detail.value[0] !== undefined;
-    let indexs = e.target.dataset.index.split("|");
-    let item = this.data.data[indexs[0]][indexs[1]];
+    let index = e.currentTarget.dataset.index;
+    let item = this.dataArray[index];
 
     item.checked = isChecked;
 
@@ -220,16 +223,10 @@ Page({
   },
 
   onRowTap(e){
-    let indexs = e.currentTarget.dataset.index.split("|");
-    //let item = this.data.data[indexs[0]][indexs[1]];
-    let item = {
-      invoice: {
-        id: 232323
-      },
-      number: 43
-    }
+    let index = e.currentTarget.dataset.index;
+    let item = this.dataArray[index];
     wx.navigateTo({
-      url: "/pages/detail/detail?id=" + item.invoice.id + "&number=" + item.number
+      url: "/pages/detail/detail?id=" + item.id
     });
   },
 
@@ -242,21 +239,34 @@ Page({
   },
 
   handleQuery(){
+    this.lineNumber = 0;
     this.page = 1;
     this.dataMap = {};
+    this.dataArray = [];
     this.checkedItems = [];
     this.fetchData(this.data.code, this.data.invoiceStatus, this.data.invoiceDay, this.page);
   },
 
   onLoad (params) {
+    let invoiceStatus = params.status || "";
+    let invoiceDay = params.day === undefined ? "" : String(params.day);
+    let statusIndex = STATUS_ARRAY.indexOf(STATUS_ARRAY.find(stauts => stauts.value == invoiceStatus));
+    let rangeIndex = RANGE_ARRAY.indexOf(RANGE_ARRAY.find(range => range.value == invoiceDay));
+   
     this.setData({
-      invoiceStatus: params.status || "",
-      invoiceDay: params.day === undefined ? "" : String(params.day)
+      invoiceStatus,
+      invoiceDay,
+      statusIndex,
+      rangeIndex
     });
     this.handleQuery();
   },
 
-  onPullDownRefresh () {
+  refresh: function(){
     this.handleQuery();
+  },
+
+  onPullDownRefresh () {
+    this.refresh();
   }
 })

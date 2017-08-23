@@ -1,38 +1,58 @@
 
 import {showError} from '../utils/util';
+import {version, from, ref} from '../config';
+import {session} from '../service/auth';
 
-export const serverUrl = "http://fpserver.qtdatas.com/";
+export const serverUrl = 'http://fpserver2.qtdatas.com/';
 
 let requestCount = 0;
+let errorMsg = '';
 
 let fetchApi = (url, params) => {
   return new Promise((resolve, reject) => {
 
     requestCount++;
+    errorMsg = '';
 
     if (requestCount === 1) {
       wx.showLoading({
+        mask: true,
         title: '请稍候...'
       })
     }
 
+    let tokenParam = {};
+    let sessionInfo = session.get();
+    if(sessionInfo && sessionInfo.token){
+      tokenParam = {
+        token: sessionInfo.token
+      };
+    }
+
     wx.request({
-      url: serverUrl + "api/" + url,
-      data: params.data,
+      url: `${serverUrl}api/${url}?version=${version}`,
+      data: Object.assign({}, params.method === 'POST' ? {ref, from} : {}, params.data),
       method: params.method || 'GET',
-      header: params.header || {
+      header: Object.assign(tokenParam, params.header || {
         'content-type': 'application/json'
-      },
+      }),
       success: function(res) {
-        resolve(res.data, res.statusCode, res.header);
+        if(res.statusCode === 200) {
+          resolve(res.data);
+        } else {
+          reject(errorMsg = (res.data.message||'服务器发生错误'));
+        }
       },
       fail: function(){
-        reject('requrest fail');
-        showError('与服务器连接失败');
+        reject(errorMsg = '与服务器连接失败');
       },
       complete: function () {
         if (--requestCount === 0) {
-          wx.hideLoading();
+          if( errorMsg ){
+            showError(errorMsg);
+          } else {
+            wx.hideLoading();
+          }
           wx.stopPullDownRefresh();
         }
       }

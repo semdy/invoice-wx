@@ -1,5 +1,7 @@
 /*@import "../../components/button/index.wxss";*/
 /*@import "../../components/icon/index.wxss";*/
+/*@import "../../components/input/index.wxss";*/
+/*@import "../../components/picker/index.wxss";*/
 
 .detail-wrapper{
   display: flex;
@@ -9,8 +11,16 @@
 }
 
 .imgView-container {
+  display: flex;
   height: 280rpx;
   overflow: hidden;
+  justify-content: center;
+  align-items: center;
+
+  text{
+    font-size: 36rpx;
+    color: #777;
+  }
 
   image{
     width: 100%;
@@ -88,8 +98,12 @@
 
 .detail-item-content{
   flex: 1;
-  padding: 24rpx 16rpx;
   border-bottom: 2rpx solid #eee;
+
+  > text{
+    display: block;
+    padding: 24rpx 16rpx;
+  }
 }
 
 .detail-list-footer{

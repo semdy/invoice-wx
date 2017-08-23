@@ -17,7 +17,7 @@
   <view class="help-block" wx:if="{{errMsg!==''}}">{{errMsg}}</view>
 
   <view class="login-actions">
-    <template is="button" data="{{text: isLogining ? '登录中...' : '登录', size: 'large', type: isLogining ? 'disabled' : 'primary'}}"></template>
+    <template is="button" data="{{text: isLogining ? '登录中...' : '登录', size: 'large'}}"></template>
   </view>
 
 </view>

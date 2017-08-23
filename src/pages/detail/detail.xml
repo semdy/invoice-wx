@@ -119,7 +119,7 @@
       <scroll-view scroll-y="true" class="sales-scrollview">
         <view class="detai-list-wrapper" wx:if="{{prodData.length==0}}">
             <view class="detail-upload-button" bindtap="handleUploadSales">
-              <template is="icon" data="{{name: 'plus', size: 'large'}}"></template>
+              <template is="icon" data="{{name: 'plus', size: 'x-large'}}"></template>
               <text class="upload-hint-text">请拍摄销货清单</text>
             </view>
         </view>

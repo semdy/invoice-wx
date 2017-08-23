@@ -253,7 +253,7 @@ Page({
   },
 
   onIconClick(){
-    
+
   },
 
   onLoad () {
@@ -269,7 +269,7 @@ Page({
 
   onReady () {
     wx.setNavigationBarTitle({
-      title: `主页 - 欢迎 ${session.get().nickName}`
+      title: `主页 - 欢迎 ${session.get().nickName||''}`
     });
   },
 

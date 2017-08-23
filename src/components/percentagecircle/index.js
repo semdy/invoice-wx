@@ -1,5 +1,38 @@
 
-let defaultOptions = {borderWidth: 2, shadowColor: '#b4c7e7', color: '#4472c4', radius: 30, percent: 0.5};
+let defaultOptions = {borderWidth: 2, shadowColor: '#b4c7e7', color: '#4472c4', radius: 30, percent: 0};
+
+function CircEaseInOut(p) {
+  return ((p*=2) < 1) ? -0.5 * (Math.sqrt(1 - p * p) - 1) : 0.5 * (Math.sqrt(1 - (p -= 2) * p) + 1);
+}
+
+function Linear(t) {
+  return t;
+}
+
+var Tween = function(target, toAttrs, duration, ease, onUpdate, callback){
+  var startTime = Date.now();
+  var reqId;
+  var originAttrs = Object.assign({}, target);
+
+  function run(){
+    reqId = requestAnimationFrame(run);
+    var percent = (Date.now() - startTime)/duration;
+    if( percent >= 1 ) percent = 1;
+
+    for(var i in toAttrs){
+      target[i] = originAttrs[i] + (toAttrs[i] - originAttrs[i])*(ease||Linear)(percent);
+    }
+
+    onUpdate(percent);
+
+    if( percent === 1 ){
+      cancelAnimationFrame(reqId);
+      callback && callback();
+    }
+  }
+
+  run();
+};
 
 var Circle = function(canvasId, options={}){
   this.context = wx.createCanvasContext(canvasId);
@@ -10,8 +43,13 @@ var Circle = function(canvasId, options={}){
     Object.defineProperty(this, i, {
       set: function (newValue) {
         if( this.options[i] !== newValue ) {
-          this.options[i] = newValue;
-          that.render();
+          if( i === 'percent' ){
+            Tween(this.options, {percent: newValue}, 600, CircEaseInOut, that.render.bind(this));
+          }
+          else {
+            this.options[i] = newValue;
+            that.render();
+          }
         }
       }
     });
@@ -21,6 +59,9 @@ var Circle = function(canvasId, options={}){
 }
 
 Circle.prototype = {
+  tweenTo(toVal, callback){
+
+  },
   render(){
     var context = this.context;
     var options = this.options;

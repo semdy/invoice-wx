@@ -76,14 +76,12 @@ function camelDate(dateNum){
   return dateNum.substring(0, 4) + "-" + dateNum.substring(4,6) + "-" + dateNum.substring(6);
 };
 
-let keyIndex = 0;
 function object2Array(obj){
   let arr = [];
   for(let i in obj){
     arr.push({
       date: camelDate(i),
       dateNumber: Number(i),
-      key: keyIndex++,
       list: obj[i]
     });
   }
@@ -93,9 +91,6 @@ function object2Array(obj){
 
 // 创建页面实例对象
 Page({
-  /**
-   * 页面的初始数据
-   */
   data: {
     rangeArray: RANGE_ARRAY.map(item => item.name),
     statusArray: STATUS_ARRAY.map(item => item.name),

@@ -1,6 +1,7 @@
 // 获取全局应用程序实例对象
 const app = getApp()
 import {login} from '../../service/user';
+import {showError} from '../../utils/util';
 
 // 创建页面实例对象
 Page({
@@ -34,6 +35,10 @@ Page({
       return this.setData({
         errMsg: '请输入密码'
       })
+    }
+
+    if (!app.data.userInfo) {
+      return showError('未找到用户信息');
     }
 
     this.setData({

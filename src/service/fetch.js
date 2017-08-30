@@ -38,7 +38,14 @@ let fetchApi = (url, params) => {
       }),
       success: function(res) {
         if(res.statusCode === 200) {
-          resolve(res.data);
+          if( res.data.tokenValid ) {
+            resolve(res.data);
+          } else {
+            session.clear();
+            wx.redirectTo({
+              url: '/pages/login/login'
+            });
+          }
         } else {
           reject(errorMsg = (res.data.message||'服务器发生错误'));
         }

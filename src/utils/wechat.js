@@ -1,12 +1,12 @@
 import {appId, appSecret, version, from, ref} from '../config';
 import {session} from '../service/auth';
-import {serverUrl} from '../service/fetch';
+import fetch, {serverUrl} from '../service/fetch';
 
 function login () {
   return new Promise((resolve, reject) => {
     wx.login({
       success (res) {
-        getOpenId(res.code).then(function(info){
+        getOpenIdByCode(res.code).then(function(info){
           resolve(Object.assign({}, res, info))
         }, reject)
       },
@@ -26,26 +26,20 @@ function getUserInfo (mergeData) {
   })
 }
 
-function getOpenId(code){
+function getOpenIdByCode(code){
   return new Promise((resolve, reject) => {
-    wx.request({
-      url: `https://api.weixin.qq.com/sns/jscode2session?appid=${appId}&secret=${appSecret}&js_code=${code}&grant_type=authorization_code`,
-      data: {},
-      method: 'GET',
-      success: function (res) {
-        if( res.data.errcode === undefined ) {
-          let info = {};
-          info.openid = res.data.openid;
-          info.expires_in = Date.now() + res.data.expires_in;
-          if( res.data.unionid ) {
-            info.unionid = res.data.unionid;
-          }
-          resolve(info);
-        } else {
-          reject(res.data);
+    fetch.get('auth/wx-auth', {code}).then(res => {
+      if( res.success ) {
+        let info = {};
+        info.openid = res.data.openid;
+        info.expires_in = Date.now() + res.data.expires_in;
+        if( res.data.unionid ) {
+          info.unionid = res.data.unionid;
         }
-      },
-      fail: reject
+        resolve(info);
+      } else {
+        reject(res.message);
+      }    
     });
   });
 }
@@ -100,4 +94,4 @@ function uploadFile(url, filePath, formParams, header){
     });
 }
 
-module.exports = { login, getUserInfo, getOpenId, uploadFile }
+module.exports = { login, getUserInfo, getOpenIdByCode, uploadFile }

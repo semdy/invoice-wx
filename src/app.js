@@ -38,10 +38,11 @@ App({
         .then(res => (this.data.userInfo = res.userInfo))
         .then(info => resolve(info))
         .catch(error => {
-          console.error('failed to get user info, error: ' + JSON.stringify(error));
+          error = JSON.stringify(error);
+          console.error('failed to get user info, error: ' + error);
           setTimeout(function () {
-            showError('用户信息获取失败！');
-          })
+            showError('用户信息获取失败: ' + error);
+          });
         })
         .finally(wx.hideLoading);
     })

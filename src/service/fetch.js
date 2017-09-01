@@ -3,7 +3,7 @@ import {showError} from '../utils/util';
 import {version, from, ref} from '../config';
 import {session} from '../service/auth';
 
-export const serverUrl = 'http://fpserver2.qtdatas.com/';
+export const serverUrl = 'https://fpserver2.qtdatas.com/';
 
 let requestCount = 0;
 let errorMsg = '';

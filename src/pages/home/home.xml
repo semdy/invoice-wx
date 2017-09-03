@@ -8,9 +8,7 @@
       <view class="circle-pie-wrap">
         <view class="circle-pie">
           <canvas class="circle-canvas" canvas-id="percentage-pie"></canvas>
-          <text class="circle-text">
-            {{formula}}
-          </text>
+          <text class="circle-text">{{formula}}</text>
         </view>
       </view>
       <view class="filter-buttons">

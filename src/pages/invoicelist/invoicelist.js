@@ -207,7 +207,7 @@ Page({
 
     item.checked = isChecked;
 
-    if( isChecked && !this.checkedItems.some(checked => checked.number === item.number) ) {
+    if(isChecked && !this.checkedItems.some(checked => checked.id === item.id)) {
       this.checkedItems.push(item);
     }
     this.checkedItems = this.checkedItems.filter(item => item.checked === true);

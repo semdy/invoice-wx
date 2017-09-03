@@ -8,7 +8,7 @@ export const login = (username, password, openId) => {
   return new Promise((resolve, reject) => {
     fetch.post('auth/login', {username, password, machine: openId})
       .then(res => {
-        if( res.success === false ){
+        if(res.success === false){
           reject(res.message);
         } else {
           session.set(Object.assign({}, app.data.userInfo, res.token));

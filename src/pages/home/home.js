@@ -257,7 +257,7 @@ Page({
   },
 
   onLoad () {
-    if( !session.get() ){
+    if(!session.get()){
       wx.redirectTo({
         url: '/pages/login/login'
       });

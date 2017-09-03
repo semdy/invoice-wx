@@ -1,6 +1,14 @@
 
 let defaultOptions = {borderWidth: 2, shadowColor: '#b4c7e7', color: '#4472c4', radius: 30, percent: 0};
 
+var reqAE = function (callback) {
+  return setTimeout(callback, 1000 / 60);
+};
+
+var cancelAE = function (id) {
+  return clearTimeout(id);
+};
+
 function CircEaseInOut(p) {
   return ((p*=2) < 1) ? -0.5 * (Math.sqrt(1 - p * p) - 1) : 0.5 * (Math.sqrt(1 - (p -= 2) * p) + 1);
 }
@@ -15,7 +23,7 @@ var Tween = function(target, toAttrs, duration, ease, onUpdate, callback){
   var originAttrs = Object.assign({}, target);
 
   function run(){
-    reqId = requestAnimationFrame(run);
+    reqId = reqAE(run);
     var percent = (Date.now() - startTime)/duration;
     if( percent >= 1 ) percent = 1;
 
@@ -26,7 +34,7 @@ var Tween = function(target, toAttrs, duration, ease, onUpdate, callback){
     onUpdate(percent);
 
     if( percent === 1 ){
-      cancelAnimationFrame(reqId);
+      cancelAE(reqId);
       callback && callback();
     }
   }

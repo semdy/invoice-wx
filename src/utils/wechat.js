@@ -6,34 +6,45 @@ function login () {
   return new Promise((resolve, reject) => {
     wx.login({
       success (res) {
-        getOpenIdByCode(res.code).then(function(info){
-          resolve(Object.assign({}, res, info))
-        }, reject)
+        if(res.code) {
+          getOpenIdByCode(res.code).then(function (info) {
+            resolve(Object.assign({}, res, info))
+          }, reject);
+        } else {
+          reject(res.errMsg);
+        }
       },
-      fail: reject
+      fail: function(){
+        reject("微信登录接口调用失败");
+      }
     })
   })
 }
 
 function getUserInfo (mergeData) {
   return new Promise((resolve, reject) => {
-    wx.getUserInfo({success: function(res){
-      if( typeof mergeData === 'object' ){
-        Object.assign(res.userInfo, mergeData);
+    wx.getUserInfo({
+      success: function(res){
+        if(typeof mergeData === 'object'){
+          Object.assign(res.userInfo, mergeData);
+        }
+        resolve(res);
+      },
+      fail: function(){
+        reject('用户拒绝授权');
       }
-      resolve(res);
-    }, fail: reject })
+    })
   })
 }
 
 function getOpenIdByCode(code){
   return new Promise((resolve, reject) => {
     fetch.get('auth/wx-auth', {code}).then(res => {
-      if( res.success ) {
+      if(res.success) {
         let info = {};
         info.openid = res.data.openid;
         info.expires_in = Date.now() + res.data.expires_in;
-        if( res.data.unionid ) {
+        if(res.data.unionid) {
           info.unionid = res.data.unionid;
         }
         resolve(info);

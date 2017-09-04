@@ -37,23 +37,27 @@ Page({
       })
     }
 
-    if (!app.data.userInfo) {
+    /*if (!app.data.userInfo) {
       return showError('未找到用户信息');
-    }
+    } */
 
     this.setData({
       isLogining: true
     });
 
-    login(this.usernameVal, this.passwordVal, app.data.userInfo.openid).then((res) => {
-      wx.switchTab({
-        url: '/pages/home/home'
-      });
-    }, errMsg => {
+    var errorHandler = errMsg => {
       this.setData({
         isLogining: false
       });
-    });
+    };
+
+    app.getUserInfo().then(userInfo => {
+      login(this.usernameVal, this.passwordVal, userInfo.openid).then((res) => {
+        wx.switchTab({
+          url: '/pages/home/home'
+        });
+      }, errorHandler);
+    }, errorHandler);
   },
 
   onFocus(){

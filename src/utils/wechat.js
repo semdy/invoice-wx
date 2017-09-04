@@ -5,7 +5,7 @@ import fetch, {serverUrl} from '../service/fetch';
 function login () {
   return new Promise((resolve, reject) => {
     wx.login({
-      success (res) {
+      success (res) {console.log('success')
         if(res.code) {
           getOpenIdByCode(res.code).then(function (info) {
             resolve(Object.assign({}, res, info))

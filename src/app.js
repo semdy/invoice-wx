@@ -26,7 +26,7 @@ App({
    */
   getUserInfo () {
     return new Promise((resolve, reject) => {
-      if (this.data.userInfo) return reject(this.data.userInfo);
+      if (this.data.userInfo) return resolve(this.data.userInfo);
 
       wx.showLoading({
         mask: true,
@@ -39,6 +39,7 @@ App({
         .then(info => resolve(info))
         .catch(error => {
           error = JSON.stringify(error);
+          reject(error);
           console.error('failed to get user info, error: ' + error);
           setTimeout(function () {
             showError('用户信息获取失败: ' + error);
@@ -53,7 +54,7 @@ App({
    * 当小程序初始化完成时，会触发 onLaunch（全局只触发一次）
    */
   onLaunch () {
-    this.getUserInfo();
+    //this.getUserInfo();
   },
   /**
    * 生命周期函数--监听小程序显示

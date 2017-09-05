@@ -4,12 +4,13 @@
  * 用于将微信官方`API`封装为`Promise`方式
  * > 小程序支持以`CommonJS`规范组织代码结构
  */
-const wechat = require('./utils/wechat')
 
-require('./pollyfill/index');
-require('./libs/wx-component/index');
+import './pollyfill/index';
+import './libs/wx-component/index';
 
-const showError = require('./utils/util').showError;
+import wechat from './utils/wechat';
+import {showError} from './utils/util';
+import {session} from './service/auth';
 
 App({
   /**
@@ -55,6 +56,11 @@ App({
    */
   onLaunch () {
     //this.getUserInfo();
+    if(!session.get()){
+      wx.redirectTo({
+        url: '/pages/login/login'
+      });
+    } 
   },
   /**
    * 生命周期函数--监听小程序显示

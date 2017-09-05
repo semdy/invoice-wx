@@ -5,6 +5,7 @@ import PercentageCircle from '../../components/percentagecircle/index';
 import fetch from '../../service/fetch';
 import {session} from '../../service/auth';
 import {showError,showToast} from '../../utils/util';
+import {uploadFile} from '../../utils/wechat';
 
 function parseDate(dateStr){
   dateStr = String(dateStr);
@@ -98,7 +99,6 @@ Page({
   },
 
   day: '1',
-
   circle: null,
 
   onButtonItemClick(e){
@@ -193,13 +193,73 @@ Page({
     });
   },
 
+  uploadBarCodeByPic(filePath, goBack){
+    let params = {
+      QR: false
+    };
+   
+    return uploadFile('invoice-upload', filePath, params).then(res =>{
+      if( res.success ){
+        showToast(res.message);
+        if (!goBack) {
+          this.launchScaner();
+        }
+      } else {
+        showError(res.message);
+      }
+    }, errMsg => {
+      showError('上传失败, 请重试!');
+    });
+  },
+
+  startCapture(){
+    wx.chooseImage({
+      count: 1, // 默认9
+      sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
+      sourceType: ['camera'], // 可以指定来源是相册还是相机，默认二者都有
+      success: (res) => {
+        // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+        let imgFilePath = res.tempFilePaths[0];
+        wx.showModal({
+          title: '提示',
+          content: '您已成功拍照',
+          confirmText: '下一张',
+          cancelText: '完成',
+          success: (res) => {
+            if (res.confirm) {
+              this.uploadBarCodeByPic(imgFilePath, false);
+            } else if (res.cancel) {
+              this.uploadBarCodeByPic(imgFilePath, true);
+            }
+          }
+        });
+      },
+      fail: () => {
+        //showError("拍照调用失败");
+      }
+    })
+  },
+
   launchScaner(){
+    let time = Date.now();
     wx.scanCode({
       success: (res) => {
         this.onBarcodeRead(res);
       },
       fail: () => {
-        //showError('扫码调用失败');
+        if(Date.now() - time >= 6000){
+          wx.showModal({
+            title: '温馨提示',
+            content: '二维码无法识别请拍摄发票',
+            confirmText: '开始拍照',
+            cancelText: '取消',
+            success: (res) => {
+              if (res.confirm) {
+               this.startCapture();
+              }
+            }
+          });
+        }
       }
     });
   },
@@ -225,9 +285,9 @@ Page({
         cancelText: '完成',
         success: (res) => {
           if (res.confirm) {
-            this.uploadBarCode(e.result, false)
+            this.uploadBarCode(e.result, false);
           } else if (res.cancel) {
-            this.uploadBarCode(e.result, true)
+            this.uploadBarCode(e.result, true);
           }
         }
       });
@@ -257,14 +317,8 @@ Page({
   },
 
   onLoad () {
-    if(!session.get()){
-      wx.redirectTo({
-        url: '/pages/login/login'
-      });
-    } else {
-      this.circle = new PercentageCircle('percentage-pie', {percent: 0, radius: 40, borderWidth: 12});
-      this.handleRefresh();
-    }
+    this.circle = new PercentageCircle('percentage-pie', {percent: 0, radius: 40, borderWidth: 12});
+    this.handleRefresh();
   },
 
   onReady () {

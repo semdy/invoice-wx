@@ -4,7 +4,9 @@
 <view class="query-container">
   <view class="query-item">
     <template is="button" data="{{text: '查询', style: 'margin-right: 16rpx;'}}"></template>
-    <template is="icon" data="{{name: 'delete', size: ''}}"></template>
+    <view bindtap="handleDel">
+      <template is="icon" data="{{name: 'delete', size: ''}}"></template>
+    </view>
   </view>
   <view class="query-item">
     <text class="query-item-label">输入发票号码:</text>

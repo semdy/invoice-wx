@@ -1,5 +1,11 @@
 
-let defaultOptions = {borderWidth: 2, shadowColor: '#b4c7e7', color: '#4472c4', radius: 30, percent: 0};
+let defaultOptions = {
+  borderWidth: 2, 
+  shadowColor: '#b4c7e7', 
+  color: '#4472c4', 
+  radius: 30, 
+  percent: 0
+};
 
 var reqAE = function (callback) {
   return setTimeout(callback, 1000 / 60);
@@ -51,7 +57,7 @@ var Circle = function(canvasId, options={}){
       set: function (newValue) {
         if( this.options[i] !== newValue ) {
           if( i === 'percent' ){
-            Tween(this.options, {percent: newValue}, 600, CircEaseInOut, this.render.bind(this));
+            Tween(this.options, {percent: newValue}, 600, Linear, this.render.bind(this));
           }
           else {
             this.options[i] = newValue;

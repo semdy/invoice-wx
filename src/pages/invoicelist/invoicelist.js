@@ -177,7 +177,7 @@ Page({
   },
 
   onIconClick(e){
-    this.handleDel();
+    
   },
 
   onCodeChange(e){

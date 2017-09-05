@@ -74,6 +74,10 @@ function uploadFile(url, filePath, formParams, header){
       title: '上传中...'
     });
 
+    for(let i in params){
+      params[i] = typeof params[i] !== 'string' ? JSON.stringify(params[i]) : params[i];
+    }
+    
     return new Promise((resolve, reject) => {
       wx.uploadFile({
         url: `${serverUrl}api/${url}?version=${version}`,

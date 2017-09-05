@@ -11,7 +11,7 @@ Page({
   data: {
     imgHeight: wx.getSystemInfoSync().windowWidth,
     tabIndex: 0,
-    picturePath: "",
+    picturePath: null,
     invoiceData: {},
     prodData: [],
     canUpdate: false
@@ -57,7 +57,7 @@ Page({
     let state = {
       invoiceData,
       prodData,
-      picturePath: data.fp_path,
+      picturePath: serverUrl + data.invoice.fp_path,
       canUpdate: ['codeMark','numberMark','issueDateMark','totalMark','correctMark'].some(key => invoiceData[key] == 1)
     };
 
@@ -102,7 +102,7 @@ Page({
 
   onThumbTap(){
     wx.previewImage({
-      urls:[serverUrl + this.data.picturePath]
+      urls:[this.data.picturePath]
     });
   },
 

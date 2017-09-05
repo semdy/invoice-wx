@@ -3,7 +3,7 @@
 
 <view class="detail-wrapper">
   <view class="imgView-container">
-    <image wx:if="{{invoiceData.fp_path}}" src="{{picturePath}}"
+    <image class="inv-image {{isPortrait ? 'portrait': ''}}" wx:if="{{invoiceData.fp_path}}" src="{{picturePath}}"
            mode="aspectFit"
            style="height: {{imgHeight}}px"
            bindtap="onThumbTap"

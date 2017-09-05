@@ -14,7 +14,8 @@ Page({
     picturePath: null,
     invoiceData: {},
     prodData: [],
-    canUpdate: false
+    canUpdate: false,
+    isPortrait: false
   },
 
   invoiceId: null,
@@ -65,7 +66,17 @@ Page({
       state.tabIndex = data.status === "noSales" ? 1 : 0; //无销货明细，跳转至销货明细tab页
     }
 
-    this.setData(state);
+    if(data.invoice.fp_path){
+      wx.getImageInfo({
+        src: state.picturePath,
+        success: (res) => {
+          state.isPortrait = res.width < res.height;
+          this.setData(state);
+        }
+      });
+    } else {
+      this.setData(state);
+    }
   },
 
   refresh(){

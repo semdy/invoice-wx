@@ -186,7 +186,7 @@ Page({
     };
    
     return uploadFile('sales-upload', filePath, params).then(data =>{
-      if( data.success ){
+      if(data.success){
         this.refresh();
         this.setData({
           tabIndex: 0

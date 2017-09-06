@@ -90,11 +90,7 @@ function uploadFile(url, filePath, formParams, header){
         success: function(res){
           if(res.statusCode === 200) {
             let data = JSON.parse(res.data);
-            if( data.success ){
-              resolve(data);
-            } else {
-              reject(data.message);
-            }
+            resolve(data);
           } else {
             reject(res.errMsg);
           }

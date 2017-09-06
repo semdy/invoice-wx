@@ -199,7 +199,7 @@ Page({
     };
    
     return uploadFile('invoice-upload', filePath, params).then(res =>{
-      if( res.success ){
+      if(res.success){
         showToast("上传成功");
         if (!goBack) {
           this.launchScaner();

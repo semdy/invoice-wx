@@ -51,7 +51,7 @@
           <checkbox-group data-index="{{item.lineNumber-1}}" bindchange="onCheckboxChange">
             <checkbox value="1" checked="{{item.checked}}" catchtap="onCheckboxClick"/>
           </checkbox-group>
-          <text>{{item.lineNumber}}</text>
+          <text>{{item.sequence}}</text>
         </view>
         <view class="table-cell">
           {{item.invoiceNumber}}

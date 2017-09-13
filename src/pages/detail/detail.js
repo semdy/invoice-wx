@@ -13,13 +13,17 @@ Page({
     tabIndex: 0,
     picturePath: null,
     invoiceData: {},
-    prodData: [],
+    prodData: {
+      docs: []
+    },
     canUpdate: false,
-    isPortrait: false
+    isPortrait: false,
+    loaded: false
   },
 
   invoiceId: null,
   isInit: true,
+  page: 1,
 
   handleDel(){
     confirm("确定要删除吗?").then(() => {
@@ -41,32 +45,50 @@ Page({
 
   },
 
-  fetchData(invoiceId){
-    fetch.get(`invoice/${invoiceId}/`).then(res => {
+  handleQuery(){
+    this.page = 1;
+    this.fetchData(this.invoiceId, this.page);
+  },
+
+  fetchData(invoiceId, page=1, isAppend=false){
+    this.setData({
+      loaded: false
+    });
+
+    fetch.get(`invoice/${invoiceId}/`, {limit: 10, page}).then(res => {
       if(res.success){
-        this._setData(res.data);
+        if(isAppend){
+          this._appendData(res.data);
+        }
+        else {
+          this._setData(res.data);
+        }
       } else {
         showError(res.message);
       }
+    }).finally(() => {
+      this.setData({
+        loaded: true
+      });
     });
   },
 
   _setData(data){
     let invoiceData = data.invoice;
-    let prodData = data.salse||[];
+    let prodData = data.sales;
     invoiceData['invoicePrice'] = invoiceData.total.total;
     let state = {
       invoiceData,
       prodData,
-      picturePath: serverUrl + data.invoice.fp_path,
+      picturePath: serverUrl + invoiceData.fp_path,
       canUpdate: ['codeMark','numberMark','issueDateMark','totalMark','correctMark'].some(key => invoiceData[key] == 1)
     };
 
-    if( this.isInit ){
-      state.tabIndex = data.status === "noSales" ? 1 : 0; //无销货明细，跳转至销货明细tab页
+    if(this.isInit){
+      state.tabIndex = invoiceData.status === "noSales" ? 1 : 0; //无销货明细，跳转至销货明细tab页
     }
 
-    if(data.invoice.fp_path){
+    if(invoiceData.fp_path){
       wx.getImageInfo({
         src: state.picturePath,
         success: (res) => {
@@ -79,8 +101,22 @@ Page({
     }
   },
 
+  _appendData(data){
+    let docs = data.sales.docs;
+    if(docs.length === 0) return showError("没有更多数据了");
+    this.data.prodData.docs = this.data.prodData.docs.concat(docs);
+    this.setData({
+      prodData: this.data.prodData
+    });
+  },
+
   refresh(){
-    this.fetchData(this.invoiceId);
+    this.handleQuery();
+  },
+
+  appendData(){
+    if(!this.data.loaded) return;
+    this.fetchData(this.invoiceId, ++this.page, true);
   },
 
   handleGoBack(){
@@ -115,6 +151,10 @@ Page({
     wx.previewImage({
       urls:[this.data.picturePath]
     });
+  },
+
+  onEndReached(){
+    this.appendData();
   },
 
   handleUpdate(){

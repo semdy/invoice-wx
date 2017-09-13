@@ -146,8 +146,8 @@ Page({
       limit: 10
     };
 
-    fetch.get("invoice", params).then(res => {
-      if( !res.success ){
+    fetch.get('invoice', params).then(res => {
+      if(!res.success){
         showError(res.message);
       } else {
         this.dataArray = this.dataArray.concat(res.data.docs);
@@ -164,15 +164,18 @@ Page({
 
         this.setData({
           data: object2Array(this.dataMap),
-          total: res.data.total,
-          loaded: true
+          total: res.data.total
         });
       }
+    }).finally(() => {
+      this.setData({
+        loaded: true
+      });
     });
   },
 
   appendData(){
-    if( !this.data.loaded ) return;
+    if(!this.data.loaded) return;
     this.fetchData(this.data.code, this.data.invoiceStatus, this.data.invoiceDay, ++this.page);
   },
 

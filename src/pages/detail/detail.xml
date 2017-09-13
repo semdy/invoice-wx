@@ -117,47 +117,47 @@
       </swiper-item>
 
       <swiper-item class="detail-swiper-item">
-        <scroll-view scroll-y="true" class="sales-scrollview">
-          <view class="detai-list-wrapper" wx:if="{{prodData.length==0}}">
+        <scroll-view scroll-y="true" class="sales-scrollview" bindscrolltolower="onEndReached">
+          <view class="detai-list-wrapper" wx:if="{{prodData.docs.length==0}}">
               <view class="detail-upload-button" bindtap="handleUploadSales">
                 <template is="icon" data="{{name: 'plus', size: 'large'}}"></template>
                 <text class="upload-hint-text">请拍摄销货清单</text>
               </view>
           </view>
-          <view class="sales-item-panel" wx:if="{{prodData.length>0}}" wx:for="{{prodData}}" wx:key="index">
+          <view class="sales-item-panel" wx:if="{{prodData.docs.length>0}}" wx:for="{{prodData.docs}}" wx:key="index">
             <view class="detail-list-item">
               <view class="detail-item-label">货物名称</view>
-              <view class="detail-item-content">{{item.name}}</view>
+              <view class="detail-item-content"><text>{{item.name}}</text></view>
             </view>
             <view class="detail-list-item">
               <view class="detail-item-label">规格型号</view>
-              <view class="detail-item-content">{{item.type}}</view>
+              <view class="detail-item-content"><text>{{item.type}}</text></view>
             </view>
             <view class="detail-item-inline">
               <view class="detail-list-item">
                 <view class="detail-item-label">单位</view>
-                <view class="detail-item-content">{{item.unit}}</view>
+                <view class="detail-item-content"><text>{{item.unit}}</text></view>
               </view>
               <view class="detail-list-item">
                 <view class="detail-item-label">数量</view>
-                <view class="detail-item-content">{{item.total}}</view>
+                <view class="detail-item-content"><text>{{item.total}}</text></view>
               </view>
             </view>
             <view class="detail-item-inline">
               <view class="detail-list-item">
                 <view class="detail-item-label">单价</view>
-                <view class="detail-item-content">{{item.price}}</view>
+                <view class="detail-item-content"><text>{{item.price}}</text></view>
               </view>
               <view class="detail-list-item">
                 <view class="detail-item-label">税额</view>
-                <view class="detail-item-content">{{item.tax}}</view>
+                <view class="detail-item-content"><text>{{item.tax}}</text></view>
               </view>
             </view>
           </view>
         </scroll-view>
 
         <view class="detail-query-footer">
-          <text>查询结果: {{prodData.length}}条</text>
+          <text>查询结果: {{prodData.total}}条</text>
         </view>
 
       </swiper-item>

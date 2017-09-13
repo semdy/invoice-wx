@@ -1,4 +1,4 @@
-import {appId, appSecret, version, from, ref} from '../config';
+import {version, from, ref} from '../config';
 import {session} from '../service/auth';
 import fetch, {serverUrl} from '../service/fetch';
 

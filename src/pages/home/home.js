@@ -147,7 +147,7 @@ Page({
   _setData(data){
     this.setData({
       percent: data.sum === 0 ? 0 : this._getSuccessCount(data.statusTotal)/data.sum,
-      formula: this._getSuccessCount(data.statusTotal) + "/" + data.sum,
+      formula: this._getSuccessCount(data.statusTotal) + '/' + data.sum,
       data: data
     });
     this.circle.percent = this.data.percent;
@@ -166,10 +166,11 @@ Page({
   },
 
   _parseInvoiceInfo(data){
-    let codes = data.split(",");
+    let codes = data.split(',');
     return {
       QR: true,
       qrDetail: data,
+      invoiceType: (codes[0] === '01' && codes[1] === '01') ? '增值发票' : (codes[0] === '01' && codes[1] === '04' ? '普通发票' : ''),
       invoiceCode: codes[2],
       invoiceNumber: codes[3],
       invoicePrice: codes[4],
@@ -181,12 +182,12 @@ Page({
   uploadBarCode(data, goBack) {
     fetch.post('invoice-upload', this._parseInvoiceInfo(data)).then(res => {
       if (res.success) {
-        showToast(res.message);
+        showToast(res.message||'上传成功');
         if (!goBack) {
           this.launchScaner();
         }
       } else {
-        showError(res.message);
+        showError(res.message||'上传失败');
       }
     }, errMsg => {
       showError('上传失败, 请重试!');
@@ -200,12 +201,12 @@ Page({
    
     return uploadFile('invoice-upload', filePath, params).then(res =>{
       if(res.success){
-        showToast("上传成功");
+        showToast('上传成功');
         if (!goBack) {
           this.launchScaner();
         }
       } else {
-        showError(res.message);
+        showError(res.message||'上传失败');
       }
     }, errMsg => {
       showError('上传失败, 请重试!');
@@ -316,9 +317,12 @@ Page({
 
   },
 
+  onShow(){
+    this.handleRefresh();
+  },
+
   onLoad () {
     this.circle = new PercentageCircle('percentage-pie', {percent: 0, radius: 40, borderWidth: 12});
-    this.handleRefresh();
   },
 
   onReady () {

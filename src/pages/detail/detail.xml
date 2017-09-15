@@ -42,6 +42,7 @@
             </view>
             <view class="detail-item-content" wx:if="{{invoiceData.numberMark==1}}">
               <input class="input normal"
+                    type="number"
                     placeholder="请输入发票号码"
                     data-key="invoiceNumber"
                     value="{{invoiceData.invoiceNumber}}"
@@ -57,7 +58,8 @@
             <view class="detail-item-content" wx:if="{{invoiceData.issueDateMark==1}}">
               <picker mode="date" data-key="issueDate" bindchange="onInvoiceChange" value="{{invoiceData.issueDate}}">
                 <view class="picker normal">
-                  <text>{{invoiceData.issueDate}}</text>
+                  <text wx:if="{{invoiceData.issueDate}}">{{invoiceData.issueDate}}</text>
+                  <text wx:if="{{!invoiceData.issueDate}}" style="color:#777;">请选择开票日期</text>
                 </view>
               </picker>
             </view>
@@ -65,14 +67,14 @@
           <view class="detail-list-item">
             <view class="detail-item-label">税前金额</view>
             <view class="detail-item-content" wx:if="{{invoiceData.totalMark==0}}">
-              <text>{{invoiceData.total.total}}</text>
+              <text>{{invoiceData.invoicePrice}}</text>
             </view>
             <view class="detail-item-content" wx:if="{{invoiceData.totalMark==1}}">
               <input class="input normal"
                     type="digit"
                     placeholder="请输入税前金额"
                     data-key="invoicePrice"
-                    value="{{invoiceData.total.total}}"
+                    value="{{invoiceData.invoicePrice}}"
                     bindinput="onInvoiceChange"
               />
             </view>
@@ -124,7 +126,7 @@
                 <text class="upload-hint-text">请拍摄销货清单</text>
               </view>
           </view>
-          <view class="sales-item-panel" wx:if="{{prodData.docs.length>0}}" wx:for="{{prodData.docs}}" wx:key="index">
+          <view class="sales-item-panel" wx:if="{{prodData.docs.length>0}}" wx:for="{{prodData.docs}}" wx:key="item.id">
             <view class="detail-list-item">
               <view class="detail-item-label">货物名称</view>
               <view class="detail-item-content"><text>{{item.name}}</text></view>

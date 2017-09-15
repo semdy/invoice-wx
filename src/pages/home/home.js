@@ -170,7 +170,7 @@ Page({
     return {
       QR: true,
       qrDetail: data,
-      invoiceType: (codes[0] === '01' && codes[1] === '01') ? '增值发票' : (codes[0] === '01' && codes[1] === '04' ? '普通发票' : ''),
+      invoiceType: (codes[0] === '01' && codes[1] === '01') ? '增值' : (codes[0] === '01' && codes[1] === '04' ? '普通' : ''),
       invoiceCode: codes[2],
       invoiceNumber: codes[3],
       invoicePrice: codes[4],

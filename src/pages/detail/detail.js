@@ -179,17 +179,17 @@ Page({
       invoiceId: this.invoiceId
     }, invoiceInfo);
 
-    if(params.invoicePrice !== undefined && !/^\d+(\.)?\d*$/.test(params.invoicePrice)){
-      return showError("请输入合法的税前金额");
-    }
-    else if(params.invoiceCode !== undefined && !/^\d{10}$/.test(params.invoiceCode)){
-      return showError("请输入10位数字的发票代码");
-    }
     if(params.invoiceCode !== undefined && !/^\d{10}$/.test(params.invoiceCode)){
       return showError("请输入10位数字的发票代码");
     }
     else if(params.invoiceNumber !== undefined && !/^\d{8}$/.test(params.invoiceNumber)){
       return showError("请输入8位数字的发票号码");
+    }
+    else if(!params.issueDate){
+      return showError("请选择开票日期");
+    }
+    else if(params.invoicePrice !== undefined && !/^\d+(\.)?\d*$/.test(params.invoicePrice)){
+      return showError("请输入合法的税前金额");
     }
     else if(params.correctCode !== undefined && !/^\d{6}$/.test(params.correctCode)){
       return showError("请输入后6位的校验码");

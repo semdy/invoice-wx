@@ -17,8 +17,8 @@ Page({
 
     let {name, username, email, phone, password, passwordrm} = this.data.data;
 
-    if(email.trim() !== "" && !/^.+@.+\..+$/.test(email)) return showError("邮箱不合法");
-    if(phone.trim() !== "" && !/^1[345789]\d{9}$/.test(phone)) return showError("手机号不合法");
+    if(email && email.trim() !== "" && !/^.+@.+\..+$/.test(email)) return showError("邮箱不合法");
+    if(phone && phone.trim() !== "" && !/^1[345789]\d{9}$/.test(phone)) return showError("手机号不合法");
     if(password !== passwordrm) return showError("两次输入的密码不一致");
 
     this.setData({

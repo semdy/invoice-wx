@@ -55,7 +55,7 @@ let fetchApi = (url, params) => {
       },
       complete: function () {
         if (--requestCount === 0) {
-          if( errorMsg ){
+          if(errorMsg){
             showError(errorMsg);
           } else {
             wx.hideLoading();

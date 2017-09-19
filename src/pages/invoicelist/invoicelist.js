@@ -65,11 +65,15 @@ const STATUS_ARRAY = [
 
 const INVOICE_STATUS = {
   "success": {text: "已完成", color: "green"},
-  "needChange": {text: "信息需更新", color: "#f90"},
-  "noInvoice": {text: "无法识别", color: "#cc0000"},
-  "failed": {text: "查询无结果", color: "#cc0000"},
-  "noSales": {text: "销货明细需补充", color: "#f90"},
-  "waiting": {text: "查询中", color: "#666"}
+  "needChange": {text: "查询中", color: "#666"},
+  "failed": {text: "无法识别", color: "#cc0000"},
+  "noSales": {text: "销货明细需更新", color: "#f90"},
+  "waiting": {text: "查询中", color: "#666"},
+  "selecting": {text: "查询中", color: "#666"},
+  "salesUpdated": {text: "查询中", color: "#666"},
+  "noInvoice": {text: "查询中", color: "#666"},
+  "invoiceChange": {text: "信息需更新", color: "#f90"},
+  "sevenFailed": {text: "失败", color: "#cc0000"}
 };
 
 function camelDate(dateNum){

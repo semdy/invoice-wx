@@ -42,19 +42,19 @@ const STATUS_ARRAY = [
     name: "查询中"
   },
   {
-    value: "failed",
+    value: "sevenFailed",
     name: "查询无结果"
   },
   {
     value: "noSales",
-    name: "销货明细需补充"
+    name: "销货明细需更新"
   },
   {
-    value: "needChange",
+    value: "invoiceChange",
     name: "信息需更新"
   },
   {
-    value: "noInvoice",
+    value: "failed",
     name: "无法识别"
   },
   {
@@ -78,7 +78,7 @@ const INVOICE_STATUS = {
 
 function camelDate(dateNum){
   return dateNum.substring(0, 4) + "-" + dateNum.substring(4,6) + "-" + dateNum.substring(6);
-};
+}
 
 function object2Array(obj){
   let arr = [];

@@ -63,7 +63,7 @@ Page({
           },
           text: '信息需更新',
           value: 0,
-          type: 'needChange'
+          type: 'invoiceChange'
         },
         {
           icon: {
@@ -71,7 +71,7 @@ Page({
             mode: 'aspectFit',
             size: 'normal'
           },
-          text: '销货明细需补充',
+          text: '销货明细需更新',
           value: 0,
           type: 'noSales'
         },
@@ -83,7 +83,7 @@ Page({
           },
           text: '查询无结果',
           value: 0,
-          type: 'failed'
+          type: 'sevenFailed'
         },
         {
           icon: {
@@ -93,7 +93,7 @@ Page({
           },
           text: '无法识别',
           value: 0,
-          type: 'noInvoice'
+          type: 'failed'
         }]
     }
   },
@@ -248,7 +248,7 @@ Page({
         this.onBarcodeRead(res);
       },
       fail: () => {
-        if(Date.now() - time >= 6000){
+        //if(Date.now() - time >= 6000){
           wx.showModal({
             title: '温馨提示',
             content: '二维码无法识别请拍摄发票',
@@ -260,7 +260,7 @@ Page({
               }
             }
           });
-        }
+        //}
       }
     });
   },

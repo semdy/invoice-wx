@@ -97,13 +97,13 @@
           <view class="detail-list-item">
             <view class="detail-item-label">购买方名称</view>
             <view class="detail-item-content">
-              <text>{{invoiceData.payerName}}</text>
+              <text>{{invoiceData.payer.payerName}}</text>
             </view>
           </view>
           <view class="detail-list-item">
             <view class="detail-item-label">销售方名称</view>
             <view class="detail-item-content">
-              <text>{{invoiceData.sellerName}}</text>
+              <text>{{invoiceData.seller.sellerName}}</text>
             </view>
           </view>
         </scroll-view>
@@ -133,7 +133,7 @@
             </view>
             <view class="detail-list-item">
               <view class="detail-item-label">规格型号</view>
-              <view class="detail-item-content"><text>{{item.type}}</text></view>
+              <view class="detail-item-content"><text>{{item.spec}}</text></view>
             </view>
             <view class="detail-item-inline">
               <view class="detail-list-item">
@@ -142,7 +142,7 @@
               </view>
               <view class="detail-list-item">
                 <view class="detail-item-label">数量</view>
-                <view class="detail-item-content"><text>{{item.total}}</text></view>
+                <view class="detail-item-content"><text>{{item.number}}</text></view>
               </view>
             </view>
             <view class="detail-item-inline">

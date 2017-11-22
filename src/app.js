@@ -56,10 +56,10 @@ App({
    */
   onLaunch () {
     //this.getUserInfo();
-    if(!session.get()){
+    if(!session.get()) {
       wx.redirectTo({
         url: '/pages/login/login'
-      });
+      })
     } 
   },
   /**
